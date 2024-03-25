@@ -1,0 +1,120 @@
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.main {
+    flex-grow: 1;
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.win {
+    position: relative;
+    flex-grow: 1;
+    border: 1px solid #aaa;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.demo-img {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: calc(100vh - 400px);
+    overflow: hidden;
+}
+
+#gif {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+#msg-con {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: calc(100vh - 400px);
+    box-sizing: border-box;
+    padding: 15px;
+    overflow-y: scroll;
+}
+
+.btn-box {
+    text-align: center;
+}
+
+.op-btn {
+    height: 40px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+#stop {
+    display: none;
+}
+
+.desc {
+    height: 400px;
+    padding: 15px;
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+    overflow-y: scroll;
+}
+
+.desc-list {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.desc .title,
+.desc-item {
+    height: 40px;
+    margin: 0 15px 15px 0;
+    background-color: #eee;
+}
+
+.desc .desc-item {
+    width: 200px;
+}
+
+.desc .long-item {
+    width: 500px;
+}
+
+
+.menu-list {
+    flex-shrink: 0;
+    width: 300px;
+    height: 100%;
+    border: 1px solid #aaa;
+}
+
+.menu-list li {
+    height: 40px;
+    margin: 0 15px 15px 0;
+    background: #eee;
+}
+
+.con-border{
+    margin-bottom:10px;
+    padding:5px;
+    border:1px solid black;
+    background-color: #eee;
+}
+.ml20{
+    margin-left: 20px;
+}

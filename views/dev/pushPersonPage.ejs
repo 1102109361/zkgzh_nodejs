@@ -1,0 +1,174 @@
+<!--
+ * @Author: 陈瑞峰 chenryuf@163.com
+ * @Date: 2022-05-16 09:29:43
+ * @LastEditors: 陈瑞峰 chenryuf@163.com
+ * @LastEditTime: 2022-05-18 14:50:19
+ * @FilePath: \ksbm\views\admissionTicket.ejs
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>设备通行人员下发</title>
+        <style>
+            .flex{
+                display: flex;
+            }
+            .flex-main{
+                flex-flow: 1;
+            }
+            .item{
+                margin-top:10px;
+            }
+            .examTime{
+                border:1px solid #333;
+                border-radius: 5px;
+                padding-left:10px;
+            }
+            .primaryBtn{
+                user-select: none;
+                cursor: pointer;
+                border:1p solid #409EFF;
+                background-color: #409EFF;
+                color:#fff;
+                display: inline-block;
+                padding:5px 10px;
+                font-size: 12px;
+                border-radius: 5px;
+            }
+            .searchPrjs{
+                margin-left:10px;
+            }
+            .prjList{
+                border:1px solid #333;
+                border-radius: 5px;
+                padding:5px;
+            }
+            .devList{
+                min-width: 200px;
+                border:1px solid #333;
+                border-radius: 5px;
+                padding:5px;
+            }
+            .pushPerson{
+                margin-top:10px;
+                margin-left:110px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="item flex">
+            <span class="label flex-main">选择考试日期：</span>
+            <span class="valSpan flex">
+                <input type="date" class="examTime flex-main"></input>
+                <div class="primaryBtn searchPrjs">查询</div>
+            </span>
+        </div>
+        <div class="item flex">
+            <span class="label flex-main">选择考试场次：</span>
+            <span class="valSpan">
+                <select class="prjList">
+                </select>
+            </span>
+        </div>
+        <div class="item flex">
+            <span class="label flex-main">选择推送设备：<br>按住Ctrl多选</span>
+            <span class="valSpan">
+                <select class="devList" multiple>
+                </select>
+            </span>
+        </div>
+        <div class="primaryBtn pushPerson">下发人员</div>
+    </body>
+    <script src="../../js/jquery.min.js"></script>
+    <script>
+        (function(){
+            //获取设备
+            function getDevs(){
+                $.ajax({
+                    url: "getDevs",
+                    type: "GET",
+                    data: {},
+                    success: function(ret) {
+                        if (ret.code) {
+                            alert(ret.msg);
+                            return;
+                        }
+                        var options = "";
+                        ret.data.forEach((n)=>{
+                            options+=`<option value="${n.devNo}">${n.devNo}</option>`;
+                        });
+                        $(".devList").html(options);
+                    }
+                });
+            }
+            //获取考试场次
+            function getPrjs(examTime){
+                $.ajax({
+                    url: "getExamPrjs",
+                    type: "GET",
+                    data: {
+                        examTime:examTime
+                    },
+                    success: function(ret) {
+                        if (ret.code) {
+                            alert(ret.msg);
+                            return;
+                        }
+                        var options = "";
+                        ret.data.forEach((n)=>{
+                            options+=`<option value="${n.prjId}">${n.prjName}【${n.examAddress}】（${n.classUserNum}人）</option>`;
+                        });
+                        $(".prjList").html(options);
+                    }
+                });
+            }
+            //下发人员
+            function toPushPersons(prjId,devNos){
+                $.ajax({
+                    url: "../hikyun/addPersonProject",
+                    type: "POST",
+                    data: {
+                        prjId:prjId,
+                        devNos:devNos.join(",")
+                    },
+                    success: function(ret) {
+                        if (ret.code) {
+                            alert(ret.msg);
+                            return;
+                        }
+                        alert("下发操作成功");
+                    }
+                });
+            }
+            $(".valSpan .examTime").val("2022-05-21");//默认设置考试日期
+            $(".searchPrjs").on("click",(e)=>{
+                //获取考试场次
+                var examTime =  $(".valSpan .examTime").val();
+                getPrjs(examTime);
+            });
+            $(".pushPerson").on("click",(e)=>{
+                //推送设备人员
+                var devNos = $(".devList").val();
+                var prjId = $(".prjList").val();
+                if(!devNos||!devNos.length){
+                    alert("请选择推送设备，按住ctrl可多选");
+                    return;
+                }
+                var r = confirm(`确认下发选中的考试场次下的人员到设备【${devNos.join(",")}】`);
+                if(!r)return;
+                toPushPersons(prjId,devNos);
+            });
+            //初始化数据
+            function pageInit(){
+                getDevs();
+                var examTime =  $(".valSpan .examTime").val();
+                getPrjs(examTime);
+            }
+            pageInit();
+        })();
+    </script>
+</html>

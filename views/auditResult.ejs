@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,
+            user-scalable=no,initial-scale=1.0, maximum-scale=1.0,
+            minimum-scale=1.0">
+        <title>报名结果</title>
+    </head>
+    <body>
+        <% if(obj.app_status_show_obj){%>
+            <h1 class="form-title">审核结果</h1>
+            <div class="from-item">
+                <div><span class="form-label">审核结果：</span><div class="succes-btn"><%=obj.app_status_show_obj.txt%></div></div>
+                <!-- <div><span class="form-label">审核日期：</span>2022-05-09 16:20</div> -->
+                <div><span class="form-label">审核意见：</span><%=obj.app_audit_remark%></div>
+            </div>
+        <%}%>
+        <!-- <% if(obj.app_status_picture_obj){%>
+            <h1 class="form-title">照片审核结果</h1>
+            <div class="from-item">
+                <div><span class="form-label">审核结果：</span><div class="succes-btn"><%=obj.app_status_picture_obj.txt%></div></div>
+                <div><span class="form-label">审核日期：</span>2022-05-09 16:20</div>
+                <div><span class="form-label">审核意见：</span><%=obj.app_status_picture_obj.txt%></div>
+            </div>
+        <%}%> -->
+        <!-- <% if(obj.app_status_check_obj){%>
+            <h1 class="form-title">资格复审结果</h1>
+            <div class="from-item">
+                <div><span class="form-label">审核结果：</span><div class="succes-btn"><%=obj.app_status_check_obj.txt%></div></div>
+                <div><span class="form-label">审核日期：</span>2022-05-09 16:20</div>
+                <div><span class="form-label">审核意见：</span><%=obj.app_status_check_obj.txt%></div>
+            </div>
+        <%}%> -->
+        <div class="from-item">
+            <div><span class="form-label">方案名称：</span><%= obj.pro_title %></div>
+            <div><span class="form-label">申报岗位：</span><%= obj.pos_post_name %></div>
+            <div><span class="form-label">报考单位：</span><%= obj.pos_dept_name %></div>
+            <div><span class="form-label">报名时间：</span><%= obj.pro_apply_start_time %>至<%= obj.pro_apply_end_time %></div>
+            <div><span class="form-label">申诉截止时间：</span><%= obj.pos_appeal_end_time %></div>
+            <div><span class="form-label">准考证打印时间：</span><%= obj.pro_print_time ||'待定' %></div>
+            <div><span class="form-label">考试时间：</span><%= obj.pro_exam_time %></div>
+            <div><span class="form-label">成绩查询时间：</span><%= obj.pro_score_time||'待定' %></div>
+        </div>
+        <div class="from-item">
+            <div><span class="form-label">考生姓名：</span><%= obj.app_name %></div>
+            <div><span class="form-label">身份证号：</span><%= obj.app_id_card %></div>
+        </div>
+        <div class="tips">
+            <div class="tips-title">温馨提示</div>
+            <div class="tips-content">考生可通过电脑端访问：<span style="color:#1890FF"><%= siteWebUrl %></span>查看岗位信息</div>
+        </div>
+    </body>
+</html>
+
+<script>
+
+</script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    .page-bg{
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0 38px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .page-title{
+        color: #333333;
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 50px;
+    }
+
+    .page-icon{
+        width: 194px;
+        height: 49px;
+        margin-top: 32px;
+    }
+
+    .confirm-info{
+        width: 100%;
+        color: #333333;
+        font-size: 16px;
+        margin-top: 45px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #EEEEEE;
+    }
+
+    .confirm-tips{
+        color: #999999;
+        margin-top: 16px;
+    }
+
+    .confirm-tips-title{
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .confirm-tips-content{
+        display: flex;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .gray-point{
+        flex-shrink: 0;
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(153, 153, 153, 0.39);
+        margin-top: 8px;
+        margin-right: 8px;
+    }
+
+    .tips-content-text{
+        display: inline-block;
+    }
+
+    .confirm-btn{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 40px;
+        color: #fff;
+        font-size: 14px;
+        background: #1890FF;
+        border-radius: 2px;
+        margin-top: 54px;
+    }
+
+    .tick-icon{
+        width: 80px;
+        height: 80px;
+        margin-top: 80px;
+    }
+
+    .result-text{
+        color: #333;
+        font-size: 24px;
+        margin-top: 20px;
+    }
+
+    .form-title{
+        color: #323233;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 50px;
+        margin: 20px 16px;
+        padding: 0;
+    }
+
+    .from-item{
+        display: flex;
+        flex-direction: column;
+        padding: 10px 16px;
+        border-top: 1px solid #EBEDF0;
+        font-size: 12px;
+    }
+    .from-item>div{
+        margin-top: 5px;
+    }
+    .form-label{
+        color: #969799;
+    }
+
+    .tips{
+        margin: 37px auto;
+        width: 80%;
+        padding: 15px 13px;
+        background: rgb(255, 251, 245);
+    }
+
+    .tips-title{
+        color: #FF0000;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .tips-content{
+        margin-top: 5px;
+        word-break: break-all;
+    }
+
+    .succes-btn{
+        display: inline-block;
+        padding: 1px 4px;
+        color: #44BB00;
+        font-size: 12px;
+        background: rgba(68, 187, 0, 0.04);
+        border: 1px solid rgba(68, 187, 0, 0.4);
+        border-radius: 4px;
+    }
+</style>

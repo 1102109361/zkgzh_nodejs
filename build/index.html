@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<!-- 详细的对接文档和流程请查看在线文档 https://open.fjrst.cn -->
+
+<head>
+  <title>福建省补贴管理平台课件播放集成SDK示例</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- <link rel="stylesheet" href="index.css"> -->
+  <!-- <script src="jquery-1.11.1.min.js"></script> -->
+  <!-- <script src="//static.fjrst.cn/monitor/v1/zypx-stat.js"></script> -->
+  <!-- <link rel="stylesheet" href="//static.fjrst.cn/monitor/v1/index.css"> -->
+  <link rel="stylesheet" href="./index.css">
+  <!-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
+  <script src="./jquery-1.11.1.min.js"></script>
+  <script src="./zypx-stat.js"></script>
+</head>
+
+<body>
+  <div id="dialog"
+    style="position: absolute;width: 1200px;height: 1000px;background-color: white;display: normal;left:100px;top:50px">
+  </div>
+  <button id="returnMain" style="position: absolute;left: 10px;top:10px;width: 60px;height: 40px;">返回</button>
+  <div id="app">
+    <div class="main" id="main">
+      <div class="win">
+        <div class="demo-img">
+          <img id="gif" src="./demo.gif" alt="">
+        </div>
+        <div id="msg-con"></div>
+      </div>
+      <div class="desc">
+        <div class="btn-box">
+          <button class="op-btn" id="start">开始播放</button>
+          <button class="op-btn" id="stop">停止播放</button>
+          <button class="op-btn" id="switch">切换课件</button>
+        </div>
+        <div style="width: 600px;margin:10px auto">
+          选择接口:
+          <select name="selectInterface" id="selectInterface" onchange="changeSelect()">
+            <option value="请求token">请求token</option>
+            <option value="执行心跳">执行心跳</option>
+            <option value="结束学习">结束学习</option>
+            <option value="校验验证码">校验验证码</option>
+            <option value="获取log">获取log</option>
+            <option value="获取logLost">获取logLost</option>
+          </select>
+          <button id="reset">重置</button>
+          <button id="normalEnvBtn">切换正式环境</button>
+          <button id="testEnvBtn">切换测试环境</button>
+          <span style="color:red" id="envStatus">当前：测试环境</span>
+        </div>
+        <div>
+
+        </div>
+        <div class="con-border" id="tokenCon">
+          <span class="ml20"></span>
+          appId: <input type="text" id="appId">
+          appSecret: <input type="text" id="appSecret">
+          idCard: <input type="text" id="idCard">
+          <button id="getToken">请求token</button>
+          <!-- <div>
+              token:<span id="access_token" style="margin-right:100px;"></span>
+              expires_in:<span id="expires_in"></span>
+            </div> -->
+        </div>
+        <div class="con-border" id="heartCon">
+          <span class="ml20"></span>
+          token: <input type="text" id="token2">
+          courseID: <input type="text" id="courseID2">
+          packageId: <input type="text" id="packageid">
+          <div style="margin-left: 15px;margin-top:5px">
+            间隔(s): <input type="text" id="heartTime" style="margin-right:15px">
+            时长(s): <input type="text" id="heartClose">
+            <button id="heartBeat">执行心跳</button>
+          </div>
+        </div>
+        <div class="con-border" id="endCon">
+          <span class="ml20"></span>
+          token: <input type="text" id="token3">
+          courseID: <input type="text" id="courseID3">
+          packageId: <input type="text" id="packageId3">
+          <!-- 心跳时长: <input type="text" id="heartTime"> -->
+          <button id="endStudy">结束学习</button>
+        </div>
+        <!-- <div style="margin-bottom:10px">
+          idCard: <input type="text" id="idCard5">
+          courseID: <input type="text" id="courseID5">
+          <button id="getCode">获取验证码</button>
+        </div> -->
+        <div class="con-border" id="subCon">
+          <span class="ml20"></span>
+          token: <input type="text" id="token4">
+          code: <input type="text" id="code">
+          <button id="subCode">验证验证码</button>
+        </div>
+        <div class="con-border" id="logCon">
+          <div style="margin-bottom: 5px;">
+            <span class="ml20"></span>
+            token: <input style="margin-right:40px;" type="text" id="token6">
+            page: <input style="margin-right:65px;" type="text" id="page6">
+            size: <input type="text" id="size6">
+          </div>
+          <div>
+            courseId: <input type="text" id="courseId6">
+            packageId: <input type="text" id="packageId6">
+            checkStatus: <input type="text" id="checkStatus6">
+            <button id="getLog">获取log</button>
+          </div>
+        </div>
+        <div class="con-border" id="logLostCon">
+          <div style="margin-bottom: 5px;">
+            <span class="ml20"></span>
+            token: <input style="margin-right:40px;" type="text" id="token7">
+            page: <input style="margin-right:65px;" type="text" id="page7">
+            size: <input type="text" id="size7">
+          </div>
+          <div>
+            courseId: <input type="text" id="courseId7">
+            packageId: <input type="text" id="packageId7">
+            checkStatus: <input type="text" id="checkStatus7">
+            <button id="getLogLost">获取logLost</button>
+          </div>
+        </div>
+
+        <!-- <div class="title"></div>
+        <div class="desc-list">
+          <div class="desc-item"></div>
+          <div class="desc-item long-item"></div>
+          <div class="desc-item"></div>
+          <div class="desc-item"></div>
+          <div class="desc-item long-item"></div>
+          <div class="desc-item"></div>
+          <div class="desc-item long-item"></div>
+          <div class="desc-item long-item"></div>
+        </div> -->
+      </div>
+    </div>
+    <div class="menu-list" id="list">
+      <ul>
+        <li></li>
+      </ul>
+    </div>
+  </div>
+  <!-- <div class="zypx-message-box__wrapper">
+    <div class="zypx-message-box">
+      <div class="zypx-message-box__header">
+        <div class="zypx-message-box__title">输入验证码</div>
+        <button class="zypx-message-box__headerbtn">X</button>
+      </div>
+      <div class="zypx-message-box__content">
+        <div class="zypx-alert">学员通过“职补小助手”小程序进行人脸验证后可查看验证码。</div>
+        <div class="zypx-input">
+          <input type="text" id="code-value" class="zypx-input__inner" placeholder="请输入">
+        </div>
+        <div class="zypx-tip-box">
+          <span class="zypx-tip-box__text">请输入验证码</span>
+        </div>
+      </div>
+      <div class="zypx-message-box__btns">
+        <button id="submit-btn" class="zypx-button">提交</button>
+      </div>
+    </div>
+  </div> -->
+</body>
+<script type="text/javascript">
+  $(document).ready(function () {
+    var dialog = document.getElementById('dialog')
+    var main = document.getElementById('main')
+    var list = document.getElementById('list')
+    var returnMain = document.getElementById('returnMain')
+    dialog.style.display = 'none'
+    returnMain.style.display = 'none'
+    hiddenCon()
+    tokenCon.style.display = 'block'
+    // 初始化数据
+    var zypxStat = window.zypxStat;
+    //请求token
+    var appId = document.getElementById('appId')
+    var appSecret = document.getElementById('appSecret')
+    var idCard = document.getElementById('idCard')
+    //提交验证码
+    var token4 = document.getElementById('token4')
+    var code = document.getElementById('code')
+    //获取验证码
+    var idCard5 = document.getElementById('idCard5')
+    var courseID5 = document.getElementById('courseID5')
+    //结束学习
+    var token3 = document.getElementById('token3')
+    var courseID3 = document.getElementById('courseID3')
+    var packageId3 = document.getElementById('packageId3')
+    //执行心跳
+    var token2 = document.getElementById('token2')
+    var courseID = document.getElementById('courseID2')
+    var packageid = document.getElementById('packageid')
+    //log
+    var token6 = document.getElementById('token6')
+    var courseId6 = document.getElementById('courseId6')
+    var packageId6 = document.getElementById('packageId6')
+    var page6 = document.getElementById('page6')
+    var size6 = document.getElementById('size6')
+    var checkStatus6 = document.getElementById('checkStatus6')
+    //loglost
+    var token7 = document.getElementById('token7')
+    var courseId7 = document.getElementById('courseId7')
+    var packageId7 = document.getElementById('packageId7')
+    var page7 = document.getElementById('page7')
+    var size7 = document.getElementById('size7')
+    var checkStatus7 = document.getElementById('checkStatus7')
+
+    var heartTime = document.getElementById('heartTime')//心跳间隔
+    var heartClose = document.getElementById('heartClose')//心跳时长
+    //环境
+    var envStatus = document.getElementById('envStatus')
+    var normalEnv = 'https://open.fjrst.cn/'
+    var testEnv = 'https://opentest.fjrst.cn/'
+    //默认环境
+    var apiUrl = 'https://opentest.fjrst.cn/'
+    zypxStat.init({
+      appId: "zzhy",
+      appSecret: "zzhy2021",
+      apiUrl: "https://opentest.fjrst.cn/", //测试环境地址，正式环境使用https://open.fjrst.cn/
+      idCard: "350123199310072351", // 身份证
+      packageId: "pack01", //课程包ID
+      courseId: "course02", // 课程id
+      selector: '', // 自定义弹窗类名(如：#dialog或者.dialog或者dialog，不加前缀符号默认为class)
+      control: true, // 是否手动控制执行（true:手动控制 false:自动执行）
+      callback: function (res) {
+        console.log("【监控回调globalCallback】:", res)
+        $('#msg-con').append("<div>" + res.msg + new Date() + "</div>")
+        if ([-1, 410].includes(res.code)) {
+          zypxStat.pause()
+          $("#stop").hide();
+          $("#gif").hide();
+          $('#msg-con').html("");
+          $("#start").show();
+        }
+      }
+    })
+
+    // 开始播放
+    $("#start").on('click', function () {
+      zypxStat.play(function (res) {
+        console.log('【token反馈】：', res.msg)
+        if (res.code == 0) {
+          // 执行监听
+          zypxStat.watch()
+        }
+      })
+      // 按钮显隐
+      $("#stop").show();
+      $("#gif").show();
+      $("#start").hide();
+    })
+
+    // 停止播放
+    $("#stop").on('click', function () {
+      zypxStat.pause()
+      $("#stop").hide();
+      $("#gif").hide();
+      $('#msg-con').html("");
+      $("#start").show();
+    })
+
+    // 切换课程
+    $("#switch").on('click', function (event) {
+      zypxStat.setCouseId('zzhy' + (new Date().getTime()))
+    })
+
+    $("#returnMain").on('click', function (event) {
+      dialog.style.display = 'none'
+      $('#dialog').html("");
+      returnMain.style.display = 'none'
+      main.style.display = 'block'
+      list.style.display = 'block'
+    })
+    $("#normalEnvBtn").on('click', function (event) {
+      apiUrl = normalEnv
+      envStatus.innerHTML = '当前：正式环境'
+    })
+    $("#testEnvBtn").on('click', function (event) {
+      apiUrl = testEnv
+      envStatus.innerHTML = '当前：测试环境'
+    })
+    // 请求token
+    $("#getToken").on('click', function (event) {
+
+      if (!appId.value && !appSecret.value && !idCard.value) {
+        appId.value = 'zzhy'
+        appSecret.value = 'zzhy2021'
+        idCard.value = '350123199310072351'
+      }
+      var zypxStat1 = window.zypxStat
+      zypxStat1.init({
+        appId: appId.value,
+        appSecret: appSecret.value,
+        apiUrl: apiUrl, //测试环境地址，正式环境使用https://open.fjrst.cn/
+        idCard: idCard.value, // 身份证
+        control: true,
+        callback: function (res) {
+        }
+      })
+      zypxStat1.setCouseId('pack01', 'course02')
+      zypxStat1.play(function (res) {
+        console.log(res, '请求token');
+        if (res.code == 0) {
+          token2.value = res.data.access_token
+          token3.value = res.data.access_token
+          token4.value = res.data.access_token
+          token6.value = res.data.access_token
+          token7.value = res.data.access_token
+          $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'> 请求token<br>" + 'token ： ' + res.data.access_token + '<br>' + 'expires_in ： ' + res.data.expires_in + '<br>' + new Date() + "</div>")
+          if ([-1, 410].includes(res.code)) {
+            zypxStat.pause()
+            $("#stop").hide();
+            $("#gif").hide();
+            $('#msg-con').html("");
+            $("#start").show();
+          }
+        } else {
+          alert('code:' + res.code + '\n' + 'msg:' + res.msg)
+        }
+      })
+
+    })
+    //执行心跳
+    $("#heartBeat").on('click', function (event) {
+      if (!courseID.value && !packageid.value) {
+        courseID.value = 'course02'
+        packageid.value = 'pack01'
+      }
+      var zypxStat2 = window.zypxStat
+      zypxStat2.init({
+        token: token2.value,
+        courseId: courseID.value,
+        packageId: packageid.value,
+        apiUrl: apiUrl,
+        control: true,
+        callback: function (res) {
+          // console.log("【监控回调globalCallback1】:", res)
+        }
+      })
+      zypxStat2.watch(function (res) {
+        console.log(res, '执行心跳');
+        $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'>执行心跳<br>code ： " + res.code + '' + '<br>msg ： ' + res.msg + '<br>' + new Date() + "</div>")
+      }, heartTime.value || 3, heartClose.value || '')
+    })
+    // 结束学习
+    $("#endStudy").on('click', function (event) {
+      if (!courseID3.value && !packageId3.value) {
+        courseID3.value = 'course02'
+        packageId3.value = 'pack01'
+      }
+      var zypxStat3 = window.zypxStat
+      zypxStat3.init({
+        token: token3.value,
+        courseId: courseID3.value,
+        packageId: packageId3.value,
+        apiUrl: apiUrl,
+        control: true,
+        callback: function (res) {
+          // console.log("【监控回调globalCallback1】:", res)
+        }
+      })
+      zypxStat3.over(function (res) {
+        console.log(res, '结束学习');
+        $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'>结束学习<br>code ： " + res.code + '' + '<br>msg ： ' + res.msg + '<br>' + new Date() + "</div>")
+      })
+
+    })
+    //验证验证码
+    $("#subCode").on('click', function (event) {
+      var zypxStat4 = window.zypxStat
+      zypxStat4.init({
+        token: token4.value,
+        code: code.value,
+        // courseId: code.value,
+        // token4: token4.value,
+        apiUrl: apiUrl,
+        control: true,
+        callback: function (res) {
+          // console.log("【监控回调globalCallback1】:", res)
+        }
+      })
+      zypxStat4.submitCode(function (res) {
+        console.log(res, '验证验证码');
+        $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'>验证验证码<br>code ： " + res.code + '' + '<br>msg ： ' + res.msg + '<br>' + new Date() + "</div>")
+      })
+    })
+    //获取验证码
+    $("#getCode").on('click', function (event) {
+      // var idCard5 = document.getElementById('idCard5')
+      // var courseID5 = document.getElementById('courseID5')
+      var zypxStat4 = window.zypxStat
+      zypxStat4.init({
+        token: token4.value,
+        code: code.value,
+        // courseId: code.value,
+        // token4: token4.value,
+        apiUrl: apiUrl,
+        control: true,
+        callback: function (res) {
+          // console.log("【监控回调globalCallback1】:", res)
+        }
+      })
+      zypxStat4.submitCode(function (res) {
+        console.log(res, '获取验证码');
+        $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'>获取验证码<br>" + res.msg + ' ' + new Date() + "</div>")
+      })
+    })
+    //reset
+    $("#reset").on('click', function (event) {
+      token4.value = ''
+      code.value = ''
+      //  idCard5.value = ''
+      //  courseID5.value = ''
+      token3.value = ''
+      courseID3.value = ''
+      packageId3.value = ''
+      token2.value = ''
+      courseID.value = ''
+      packageid.value = ''
+      appId.value = ''
+      appSecret.value = ''
+      idCard.value = ''
+      token6.value = ''
+      courseId6.value = ''
+      packageId6.value = ''
+      checkStatus6.value = ''
+      page6.value = ''
+      size6.value = ''
+      token7.value = ''
+      courseId7.value = ''
+      packageId7.value = ''
+      checkStatus7.value = ''
+      page7.value = ''
+      size7.value = ''
+    })
+    //
+    $("#getLog").on('click', function (event) {
+      var zypxStat6 = window.zypxStat
+      zypxStat6.init({
+        token: token6.value,
+        courseId: courseId6.value,
+        packageId: packageId6.value,
+        checkStatus: checkStatus6.value,
+        page: page6.value,
+        size: size6.value,
+        apiUrl: apiUrl,
+        control: true,
+        callback: function (res) {
+          // console.log("【监控回调globalCallback1】:", res)
+        }
+      })
+      zypxStat6.getLog(function (res) {
+        console.log(res, 'getLog');
+        if (res.code != 0) {
+          $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'>getLog<br>code ： " + res.code + "<div>msg ： " + res.msg + '<br>' + new Date() + "</div>")
+        } else {
+          if (res.data != 0 && res.data) {
+            $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'>getLog<br>code ： " + res.code + "<div>data ： 略" + '<br>' + new Date() + "</div>")
+            console.log(res.data);
+            $('#dialog').append(printObject(res.data))
+            dialog.style.display = 'block'
+            returnMain.style.display = 'block'
+            main.style.display = 'none'
+            list.style.display = 'none'
+          } else {
+            $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'>getLog<br>code ： " + res.code + "<div>data ： 空" + '<br>' + new Date() + "</div>")
+          }
+        }
+      })
+    })
+    $("#getLogLost").on('click', function (event) {
+      var zypxStat6 = window.zypxStat
+      zypxStat6.init({
+        token: token7.value,
+        courseId: courseId7.value,
+        packageId: packageId7.value,
+        checkStatus: checkStatus7.value,
+        page: page7.value,
+        size: size7.value,
+        apiUrl: apiUrl,
+        control: true,
+        callback: function (res) {
+          // console.log("【监控回调globalCallback1】:", res)
+        }
+      })
+      zypxStat6.getLogLost(function (res) {
+        console.log(res, 'getLogLost');
+        if (res.code != 0) {
+          $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'>getLogLost<br>code ： " + res.code + "<div>msg ： " + res.msg + '<br>' + new Date() + "</div>")
+        } else {
+          $('#msg-con').append("<div style='border:1px solid black;padding:10px;margin:5px 0'>getLogLost<br>code ： " + res.code + "<div>data ： 略" + '<br>' + new Date() + "</div>")
+          $('#dialog').append(printObject(res.data))
+          dialog.style.display = 'block'
+          returnMain.style.display = 'block'
+          main.style.display = 'none'
+          list.style.display = 'none'
+          // alert(JSON.stringify(res.data));
+          // alert(JSON.stringify(res.data, null, 100));// 具体参数的意义参考下面链接
+        }
+      })
+    })
+  })
+  function changeSelect() {
+    var select = document.getElementById('selectInterface')
+    switch (select.value) {
+      case '请求token':
+        hiddenCon()
+        tokenCon.style.display = 'block'
+        console.log('请求token');
+        break;
+      case '执行心跳':
+        hiddenCon()
+        heartCon.style.display = 'block'
+        console.log('执行心跳');
+        break;
+      case '结束学习':
+        hiddenCon()
+        endCon.style.display = 'block'
+        console.log('结束学习');
+        break;
+      case '校验验证码':
+        hiddenCon()
+        subCon.style.display = 'block'
+        console.log('校验验证码');
+        break;
+      case '获取log':
+        hiddenCon()
+        logCon.style.display = 'block'
+        console.log('获取log');
+        break;
+      case '获取logLost':
+        hiddenCon()
+        logLostCon.style.display = 'block'
+        console.log('获取logLost');
+        break;
+    }
+  }
+  function hiddenCon() {
+    tokenCon.style.display = 'none'
+    heartCon.style.display = 'none'
+    endCon.style.display = 'none'
+    subCon.style.display = 'none'
+    logCon.style.display = 'none'
+    logLostCon.style.display = 'none'
+  }
+</script>
+
+</html>

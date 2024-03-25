@@ -1,0 +1,376 @@
+@charset "utf-8";
+html {
+    margin: 0;
+    font-size: 100px;
+}
+
+body, h1, h2, h3, h4, h5, h6, hr, p, dl, dt, dd, ul, li, button, input, textarea, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #f5f5f5;
+    margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    text-rendering: auto;
+}
+
+em, i {
+    font-style: normal;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+li {
+    line-height: normal;
+}
+
+.is-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+
+.info-panel {
+    font-size: 0.28rem;
+    color: #333;
+}
+
+.tab-tit {
+    display: flex;
+    height: 1rem;
+    line-height: 0.98rem;
+    background-color: #fff;
+    padding: 0 0.3rem;
+}
+
+.tab-tit .item {
+    flex: 1;
+    text-align: center;
+    font-size: 0.34rem;
+    font-weight: bold;
+    position: relative;
+}
+.mar{
+    background-color:#f5f5f5;
+    height:0.3rem;
+    margin: 0.3rem 0;
+}
+.mar :first-child{
+    background-color:#f5f5f5;
+    height:1.2rem;
+}
+.tab-tit .current:after {
+    content: '';
+    width: 100%;
+    height: 0.06rem;
+    border-radius: 1rem;
+    background-color: #3980fe;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.search-bar {
+    background-color: #fff;
+    padding: 0.3rem 0.3rem 0;
+}
+
+.search-bd {
+    background-color: #f5f5f5;
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 0.1rem;
+}
+
+.search-bar .icon {
+    width: 0.4rem;
+    height: 0.4rem;
+    margin: 0 0.2rem;
+}
+
+.search-bar .ipt {
+    flex: 1;
+    height: 0.8rem;
+    border: none;
+    font-size: 0.26rem;
+    background-color: #f5f5f5;
+}
+
+.search-bar .ipt::placeholder {
+    color: #999;
+}
+
+.search-bar:hover #btn1{
+    display: block;
+}
+.search-bar #btn1 {
+    display: none;
+}
+
+.search-bar .btn {
+    line-height: 0.8rem;
+    padding: 0 0.4rem;
+    color: #666;
+    font-size: 0.26rem;
+}
+
+.search-bar .ipt:focus {
+    outline: none;
+}
+
+.search-result {
+    margin: 0.3rem 0.3rem;
+}
+
+.search-result i {
+    color: #3980fe;
+    font-weight: bold;
+}
+
+.info-items {
+    margin: 0.3rem;
+    background-color: #fff;
+    border-radius: 0.1rem;
+    /* padding-top: 0.3rem; */
+}
+
+.info-items .date {
+    font-weight: bold;
+    color: #3980fe;
+}
+
+.info-items .date:before {
+    content: ' ';
+    width: 0.2rem;
+    height: 0.4rem;
+    border-radius: 0 0.2rem 0.2rem 0;
+    background-color: #3980fe;
+    display: inline-block;
+    vertical-align: -0.1rem;
+    margin-right: 0.14rem;
+}
+
+.info-items .list-item {
+    margin: 0 0.36rem;
+    padding: 0.3rem 0;
+}
+
+.info-items .list-item {
+    border-bottom: 0.01rem solid #e6e6e6;
+}
+
+/* .info-items .list-item:last-child {
+    border-bottom: none;
+} */
+
+.info-items .list-item .tit {
+    font-size: 0.3rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.info-items .list-item .info {
+    margin-top: 0.16rem;
+    font-size: 0.24rem;
+    color: #999;
+    display:-webkit-box;         
+    -webkit-box-orient:vertical; 
+    -webkit-line-clamp:2;      
+    overflow:hidden;            
+    text-overflow:ellipsis; 
+}
+
+.info-items .list-item .dot {
+    display: inline-block;
+    vertical-align: 0.02rem;
+    width: 0.12rem;
+    height: 0.12rem;
+    background-color: #bbb;
+    border-radius: 100%;
+    margin-right: 0.1rem;
+}
+
+.info-items .list-item .arrow {
+    font-size: 0.24rem;
+    color: #999;
+    text-align: right;
+    margin-top: 0.16rem;
+}
+
+.bottom-tips {
+    text-align: center;
+    padding-bottom: 0.3rem;
+    color: #999;
+}
+
+.info-detail {
+    min-height: 100vh;
+    background-color: #fff;
+    font-size: 0.28rem;
+}
+
+.info-detail .detail-hd {
+    padding: 0.5rem 0.36rem;
+    border-bottom: 0.01rem solid #e6e6e6;
+}
+
+.info-detail .detail-hd .tit {
+    font-size: 0.42rem;
+    line-height: 1.5;
+    font-weight: bold;
+    padding-bottom: 0.2rem;
+}
+
+.info-detail .detail-hd .info {
+    margin-top: 0.12rem;
+    font-size: 0.28rem;
+    color: #999;
+    display:-webkit-box;         
+    -webkit-box-orient:vertical; 
+    -webkit-line-clamp:2;      
+    overflow:hidden;            
+    text-overflow:ellipsis; 
+}
+
+.info-detail .detail-hd .dot {
+    display: inline-block;
+    vertical-align: 0.04rem;
+    width: 0.12rem;
+    height: 0.12rem;
+    background-color: #bbb;
+    border-radius: 100%;
+    margin-right: 0.1rem;
+}
+
+.info-detail .detail-bd {
+    padding: 0.5rem 0.36rem 1.8rem;
+    font-size: 0.32rem;
+    line-height: 2;
+}
+
+.return-btn {
+    position: fixed;
+    right: 0.3rem;
+    bottom: 0.8rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 100%;
+    background-color: rgba(0,0,0,0.5);
+    backdrop-filter: blur(0.05rem);
+    color: #fff;
+    font-size: 0.24rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+}
+
+.return-btn .icon {
+    width: 0.36rem;
+    height: 0.36rem;
+    margin-bottom: 0.05rem;
+}
+
+.file {
+    margin-top: 0.4rem;
+    padding: 0.2rem 0.3rem;
+    background-color: #f5f5f5;
+    line-height: 1.5;
+    font-size: 0.3rem;
+    color: #555;
+}
+
+.file .icon {
+    width: 0.4rem;
+    height: 0.4rem;
+    vertical-align: -0.08rem;
+    margin-right: 0.1rem;
+}
+
+.empty-panel {
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+.empty-panel .txt {
+    padding-top: 0.2rem;
+    color: #999;
+}
+
+/*去除a标签下划线*/
+a {
+	text-decoration: none;
+    outline: none;
+}
+/*去除未被访问的a标签的下划线*/
+a:link {
+	text-decoration: none;
+}
+/*去除已经被访问过的a标签的下划线*/
+a:visited {
+	text-decoration: none;
+}
+/*去除鼠标悬停时的a标签的下划线*/
+a:hover {
+	text-decoration: none;
+}
+/*去除正在点击的a标签的下划线（鼠标按下，尚未松开）*/
+a:active {
+	text-decoration: none;
+}
+/*去除获得焦点的a标签的下划线（被鼠标点击过）*/
+a:focus {
+	text-decoration: none;
+}
+
+input[type=search]::-webkit-search-cancel-button{
+    -webkit-appearance: none;
+}
+/* .line2{
+    display:-webkit-box;         
+    -webkit-box-orient:vertical; 
+    -webkit-line-clamp:2;      
+    overflow:hidden;            
+    text-overflow:ellipsis;      
+} */
+
+@media screen and (min-width: 750px) {
+  html {
+    font-size: 100px;
+  }
+}
+
+@media screen and (min-width: 640px) and (max-width: 749px) {
+  html {
+    font-size: 85.3px;
+  }
+}
+
+@media screen and (min-width: 414px) and (max-width: 639px) {
+  html {
+    font-size: 55.2px;
+  }
+}
+
+@media screen and (min-width: 375px) and (max-width: 413px) {
+      html {
+        font-size: 50px;
+      }
+}
+
+@media screen and (min-width: 320px) and (max-width: 374px) {
+  html {
+    font-size: 42.7px;
+  }
+}
+

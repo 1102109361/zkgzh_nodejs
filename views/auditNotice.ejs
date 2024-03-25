@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>审核结果</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="header bigFont">
+            <div style="display: flex;align-items: center;">
+                <img src="../zplogo.png" alt="" style="width: 50px;height: 50px;margin-right: 10px;">
+                <span>福建招聘平台</span>
+            </div>
+            <span style="margin-right: 100px;">审核通知</span>
+        </div>
+        <div class="info smallFont">
+            <img src="../mind.png" style="width: 30px;height: 30px;margin: 0 10px 0 40px;">
+            <div>
+                提示,请及时通过电脑端访问:<br>
+                <a href=""><%= siteWebUrl %></a>
+                完成审核
+            </div>
+        </div>
+        <div class="mainCard">
+            <span class="caseSpan bigFont"><strong>2022年福建理工学校公开招聘工作人员方案</strong></span>
+            <table class="cardBody" cellspacing="0">
+                <tr>
+                    <th>招聘岗位</th>
+                    <th>待审核人数</th>
+                </tr>
+                <tr>
+                    <td>合计</td>
+                    <td>100</td>
+                </tr>
+                <tr>
+                    <td>语文教师</td>
+                    <td>30</td>
+                </tr>
+                <tr>
+                    <td>数学教师</td>
+                    <td>30</td>
+                </tr>
+                <tr>
+                    <td>英语教师</td>
+                    <td>40</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</body>
+
+</html>
+
+<script>
+
+</script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+        letter-spacing: 0.2px;
+        font-size: 14px;
+    }
+
+    .header {
+        margin: 10px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between
+    }
+
+    a {
+        text-decoration:none;
+        color: rgb(116 149 225);
+    }
+
+    .bigFont {
+        font-size: 16px;
+    }
+
+    .smallFont {
+        font-size: 12px;
+    }
+
+    .caseSpan {
+        width: 100%;
+        height: 22px;
+        text-align: center;
+        display: block;
+        line-height: 50px;
+        margin: 0 auto 30px auto;
+    }
+
+    .mainCard {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+        margin: 15px;
+        border-radius: 5px
+    }
+
+    .cardBody {
+        display: flex;
+        flex-direction: column;
+        margin: 10px 20px;
+        align-items: center;
+    }
+
+    .cardBody div {
+        margin-bottom: 10px;
+    }
+
+    .cardBody div span {
+        color: #4a79e1;
+    }
+
+
+    .info {
+        display: flex;
+        background-color: #fdf6ec;
+        align-items: center;
+        padding: 10px 0;
+    }
+
+    table {
+        padding-bottom: 15px;
+    }
+
+    tr {
+        line-height: 35px;
+        color: rgb(138 139 142)
+    }
+
+    tr:nth-of-type(1) {
+        line-height: 45px;
+        background-color: #f2f2f2;
+
+    }
+
+    tr:nth-child(2n-1) {
+        background-color: #fafafa;
+    }
+    td {
+        width: 200px;
+        text-align: center;
+    }
+
+    tr td:nth-last-of-type(1) {
+        color: #4a79e1
+    }
+</style>

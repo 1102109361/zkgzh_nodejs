@@ -1,0 +1,65 @@
+<!--
+ * @Author: 陈瑞峰 chenryuf@163.com
+ * @Date: 2022-06-21 10:44:08
+ * @LastEditors: 陈瑞峰 chenryuf@163.com
+ * @LastEditTime: 2022-06-22 11:00:04
+ * @FilePath: \ksbm\views\SZ.ejs
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0,
+            maximum-scale=1.0, minimum-scale=1.0">
+        <title>招聘动态</title>
+    </head>
+    <script src="../js/vue.js"></script>
+    <link type="text/css" rel="styleSheet" href="../css/SZ.css" />
+    <body>
+        <div id="app">
+            <div class="header">
+                <form name="query" method="get" action="SZ">
+                    <div class="inputDiv">
+                        <input class="input" type="text" value="<%=keyword%>"
+                        name="keyword" placeholder="请输入关键字">
+                    </div>
+                    <!-- <div class="title">
+                    <div class="title-box">
+                        <%=areaName%>
+                        <select name="areaCode" onchange="javascript:this.form.submit()">
+                            <% areas.forEach(function(node){%>
+                                <option value="<%=node.value%>" <%=areaCode==node.value?'selected':''%> ><%=node.label%></option>
+                            <%}) %>
+                        </select>
+                    </div>
+                    <div class="title-box">
+                        <%=year||'发布年度'%>
+                        <select name="year" onchange="javascript:this.form.submit()">
+                            <% years.forEach(function(node){%>
+                                <option value="<%=node.value%>" <%=year==node.value?'selected':''%> ><%=node.label%></option>
+                            <%}) %>
+                        </select>
+                    </div>
+                </div> -->
+                </form>
+            </div>
+            <div class="itemList">
+                <% datas.forEach(function(node,index){ %>
+                    <%if(index==0||node.noticeTime!=(datas[index+1]||{}).noticeTime){%>
+                        <div class="infoTime"><%=node.noticeTime%></div>
+                    <%}%>
+                    <a class="info" href="<%=node.detailUrl%>" target="_new">
+                        <div class="info-title"><%=node.title%></div>
+                        <div class="info-mes"><%=node.areaName%>|<%=node.noticeTime%></div>
+                    </a>
+                <%})%>
+            </div>
+        </div>
+    </body>
+<script>
+</script>
+
+</html>

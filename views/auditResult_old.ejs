@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>报名结果</title>
+</head>
+
+<body>
+<div id="app">
+    <div class="header bigFont">
+        <div style="display: flex;align-items: center;">
+            <img src="../../zplogo.png" alt="" style="width: 50px;height: 50px;margin-right: 10px;">
+            <span>福建招聘平台</span>
+        </div>
+        <span style="margin-right: 80px;">审核结果</span>
+    </div>
+    <div class="mainCard">
+        <!-- <% if(obj.app_status_obj){%>
+            <div class="cardHeader">
+                <div class="chinfo bigFont">
+                    <img src="../../<%=obj.app_status_obj.icon%>.png" class="iconImg"><span class="statusSpan <%=obj.app_status_obj.txtColor%>"><%=obj.app_status_obj.txt%></span></span>
+                </div>
+            </div>
+            <div class="line"></div>
+        <%}%> -->
+        <% if(obj.app_status_show_obj){%>
+            <div class="cardHeader">
+                <div class="chinfo bigFont">
+                    <img src="../../<%=obj.app_status_show_obj.icon%>.png" class="iconImg"><span class="statusSpan <%=obj.app_status_show_obj.txtColor%>"><%=obj.app_status_show_obj.txt%></span></span>
+                </div>
+            </div>
+            <div class="line"></div>
+        <%}%>
+        <% if(obj.app_status_picture_obj){%>
+            <div class="cardHeader">
+                <div class="chinfo bigFont">
+                    <img src="../../<%=obj.app_status_picture_obj.icon%>.png" class="iconImg"><span class="statusSpan <%=obj.app_status_picture_obj.txtColor%>"><%=obj.app_status_picture_obj.txt%></span></span>
+                </div>
+            </div>
+            <div class="line"></div>
+        <%}%>
+        <% if(obj.app_status_check_obj){%>
+            <div class="cardHeader">
+                <div class="chinfo bigFont">
+                    <img src="../../<%=obj.app_status_check_obj.icon%>.png" class="iconImg"><span class="statusSpan <%=obj.app_status_check_obj.txtColor%>"><%=obj.app_status_check_obj.txt%></span></span>
+                </div>
+            </div>
+            <div class="line"></div>
+        <%}%>
+        <div style="height:10px;"></div>
+        <!--报名未通过/资格复审未通过显示 -->
+        <div class="cardBody">
+            <div>
+                审核结果:&nbsp;<span><%=obj.app_status_show_obj?obj.app_status_show_obj.txt:""%>
+                <% if(obj.app_status_show_obj){%>
+                    ；
+                <%}%>
+                <%=obj.app_status_picture_obj?obj.app_status_picture_obj.txt:""%></span>
+            </div>
+            <!-- <div>审核日期:&nbsp;<span><%=obj.updatedAt||""%></span></div> -->
+            <div>审核意见:&nbsp;<span><%=obj.app_audit_remark||""%></span></div>
+            <div>申述截止时间:&nbsp;<span><%=obj.pos_appeal_end_time||""%></span> </div>
+        </div>
+        <span class="caseSpan bigFont"><strong><%= obj.pro_title %></strong></span>
+        <div class="cardBody">
+            <div>报考单位:&nbsp;<span><%= obj.pos_dept_name %></span></div>
+            <div>申报岗位:&nbsp;<span><%= obj.pos_post_name %></span></div>
+            <div>报名时段:&nbsp;<span><%= obj.pro_apply_start_time %>至<%= obj.pro_apply_end_time %></span></div>
+            <div>报名时间:&nbsp;<span><%= obj.app_apply_time %></span></div>
+            <!-- 报名成功/资格复审通过显示 -->
+            <!-- <div>当前岗位报名成功人数:&nbsp;<span>50</span> </div> -->
+            <div class="line" style="width: 100% !important;"></div>
+            <div>考生姓名:&nbsp;<span><%= obj.app_name %></span></div>
+            <div>身份证号:&nbsp;<span><%= obj.app_id_card %></span></div>
+        </div>
+    </div>
+
+    <div class="info smallFont">
+        <img src="../../mind.png" style="width: 30px;height: 30px;margin: 0 10px 0 40px;">
+        <div>
+            提示,可通过电脑端访问:<br>
+            <a href=""><%= siteWebUrl %></a>
+            重新选择报名岗位
+            <!-- 报名成功/资格复审通过显示：了解详细考试安排 -->
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
+
+<script>
+
+</script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+        letter-spacing: 0.2px;
+        font-size: 14px;
+    }
+
+    .header {
+        margin: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between
+    }
+
+    a {
+        text-decoration:none;
+        color: rgb(116 149 225);
+    }
+
+    .bigFont {
+        font-size: 16px;
+    }
+
+    .smallFont {
+        font-size: 12px;
+    }
+
+    .mainCard {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+        margin: 0 15px;
+        border-radius: 5px
+    }
+
+    .line {
+        margin: 0 auto;
+        width: 86%;
+        height: 0;
+        border: 1px solid rgb(221, 224, 227);
+    }
+
+    .cardHeader {
+        height: 50px;
+        display: flex;
+        justify-content: space-evenly;
+    }
+    .chinfo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0;
+    }
+    .cardHeader .iconImg{
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+    .infoColor{
+        color:#909399;
+    }
+    .primaryColor{
+        color: #409EFF;
+    }
+    .successColor{
+        color: #67C23A;
+    }
+    .warningColor{
+        color: #E6A23C;
+    }
+    .dangerColor{
+        color: #F56C6C;
+    }
+    .cardHeader .statusSpan {
+        line-height: 10px;
+        display: block;
+        font-weight: 600;
+    }
+
+    .caseSpan {
+        width: 100%;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .cardBody {
+        display: flex;
+        flex-direction: column;
+        margin: 10px 20px;
+    }
+
+    .cardBody:nth-of-type(2) div span {
+        color: #d55958;
+    }
+
+    .cardBody div {
+        margin-bottom: 10px;
+    }
+
+    .cardBody div span {
+        color: #4a79e1;
+    }
+
+    .info {
+        position: fixed;
+        display: flex;
+        bottom: 0;
+        left:0;
+        right:0;
+        background-color: #fdf6ec;
+        align-items: center;
+        padding: 10px 0;
+    }
+</style>

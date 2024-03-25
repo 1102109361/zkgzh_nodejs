@@ -1,0 +1,223 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width,maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0">
+    <title>招聘资讯</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <script src="../js/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+</head>
+<script>
+    // document.getElementById('item1').onclick=function(){
+    //     console.log(1);
+    // }
+    var url = window.location.href
+    function getUrlParams(url) {
+        let urlStr = url.split('?')[1]
+        let obj = {};
+        let paramsArr = urlStr.split('&')
+        for(let i = 0, len = paramsArr.length; i < len; i++) {
+            let arr = paramsArr[i].split('=')
+            obj[arr[0]] = arr[1];
+        }
+        return obj
+    }
+    function returnTop() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+    var tab = 1
+
+    function method(e) {
+        returnTop()
+        var info1 = document.getElementById("info1")
+        var info2 = document.getElementById("info2")
+        var info3 = document.getElementById("info3")
+        var item1 = document.getElementById("item1")
+        var item2 = document.getElementById("item2")
+        var item3 = document.getElementById("item3")
+        item1.className = "item"
+        item2.className = "item"
+        item3.className = "item"
+        info1.style.display = "none"
+        info2.style.display = "none"
+        info3.style.display = "none"
+        switch(e) {
+            case 1:
+                item1.className = "item current"
+                info1.style = "display:true"
+                    tab = 1
+                    newUrl = changeURLArg(window.location.href,'tab',1)
+                    history.pushState('', '', newUrl);
+                break;
+            case 2:
+                item2.className = "item current"
+                info2.style = "display:true"
+                tab = 2
+                newUrl = changeURLArg(window.location.href,'tab',2)
+                    history.pushState('', '', newUrl);
+                break;
+            case 3:
+                item3.className = "item current"
+                info3.style = "display:true"
+                tab = 3
+                newUrl = changeURLArg(window.location.href,'tab',3)
+                    history.pushState('', '', newUrl);
+                break;
+            default: break
+        }
+    }
+    function changeURLArg(url,arg,arg_val){
+    var pattern=arg+'=([^&]*)';
+    var replaceText=arg+'='+arg_val;
+    if(url.match(pattern)){
+        var tmp='/('+ arg+'=)([^&]*)/gi';
+        tmp=url.replace(eval(tmp),replaceText);
+        return tmp;
+    }else{
+        if(url.match('[\?]')){
+            return url+'&'+replaceText;
+        }else{
+            return url+'?'+replaceText;
+        }
+    }
+}
+    function goUrl() {
+        window.open('/mp/ZDE', "_blank");
+    }
+    function del() {
+        var ipt = document.getElementById('ipt')
+        ipt.value = ''
+        var btn=document.getElementById('btn1')
+        btn.style.display='none'
+    }
+    function showbtn(){
+        var btn=document.getElementById('btn1')
+        btn.style='display:true'
+    }
+    window.onload = function () {
+        method(getUrlParams(url).tab * 1)
+        // document.title='招聘资讯'
+    }
+
+</script>
+
+<body>
+    <div class="info-panel">
+        <div class="is-sticky">
+            <div class="search-bar">
+                <div class="search-bd">
+                    <img class="icon" src="../icon-search.png" alt=" " />
+                    <form class="form" @submit.prevent action="javascript: void(0);"></form>
+                    <input type="search" class="ipt" id="ipt" placeholder="请输入资讯标题或招聘方案名称关键字" value="" onfocus="showbtn()">
+                    </form>
+                    <span class="btn" id="btn1" style="display: none;" onclick="del()">取消</span>
+                </div>
+            </div>
+            <div class="tab-tit">
+                <!--选中样式添加 current-->
+                <span class="item current" id="item1" onclick="method(1)">招聘动态</span>
+                <span class="item" id="item2" onclick="method(2)">招聘公示</span>
+                <span class="item" id="item3" onclick="method(3)">招聘通知</span>
+            </div>
+        </div>
+        <!-- <div class="search-result">搜索到 <i><%=datas.length%></i> 条资讯</div> -->
+
+        <!--同一个日期的资讯放在一起-->
+        <div class="info-items" id="info1">
+            <% datas.forEach(function(node,index){ %>
+                <%if(index==0||node.noticeTime!=(datas[index-1]||{}).noticeTime){%>
+                    <div class="mar"></div>
+                    <span class="date">
+                        <%=node.noticeTime%>
+                    </span>
+                    <%}%>
+                        <!-- <%if(node.detailUrl.indexOf('220.160.53.33')==-1&&node.detailUrl.indexOf('ksbm.fjrst.cn:8905')==-1){%> -->
+                        <a href="<%=node.detailUrl%>" >
+                            <!-- <%}%> -->
+                            <!-- <%if(node.detailUrl.indexOf('220.160.53.33')!=-1||node.detailUrl.indexOf('ksbm.fjrst.cn:8905')!=-1){%> -->
+                            <!-- <a href="/mp/ZDE?newId=<%=node.newId%>" > -->
+                            <!-- <%}%>   -->
+                            <div class="list-item" href="<%=node.detailUrl%>" >
+                                <div class="tit line2">
+                                    <%=node.title%>
+                                </div>
+                                <div class="info"><i class="dot"></i>
+                                    <%=node.proTitle%>
+                                </div>
+                                <div class="arrow">前往查看 <i class="icon">→</i></div>
+                            </div>
+                        </a>
+                        <%})%>
+        </div>
+        <!--同一个日期的资讯放在一起-->
+        <div class="info-items" id="info2" style="display: none;">
+            <% datas2.forEach(function(node,index){ %>
+                <%if(index==0||node.noticeTime!=(datas2[index-1]||{}).noticeTime){%>
+                    <div class="mar"></div>
+                    <span class="date">
+                        <%=node.noticeTime%>
+                    </span>
+                    <%}%>
+                        <a href="<%=node.detailUrl%>">
+                            <div class="list-item" href="<%=node.detailUrl%>" >
+                                <div class="tit line2">
+                                    <%=node.title%>
+                                </div>
+                                <div class="info"><i class="dot"></i>
+                                    <%=node.proTitle%>
+                                </div>
+                                <div class="arrow">前往查看 <i class="icon">→</i></div>
+                            </div>
+                        </a>
+                        <%})%>
+        </div>
+        <!--同一个日期的资讯放在一起-->
+        <div class="info-items" id="info3" style="display: none;">
+            <% datas3.forEach(function(node,index){ %>
+                <%if(index==0||node.noticeTime!=(datas3[index-1]||{}).noticeTime){%>
+                    <div class="mar"></div>
+                    <span class="date">
+                        <%=node.noticeTime%>
+                    </span>
+                    <%}%>
+                        <a href="<%=node.detailUrl%>" >
+                            <div class="list-item" href="<%=node.detailUrl%>" >
+                                <div class="tit line2">
+                                    <%=node.title%>
+                                </div>
+                                <div class="info"><i class="dot"></i>
+                                    <%=node.proTitle%>
+                                </div>
+                                <div class="arrow">前往查看 <i class="icon">→</i></div>
+                            </div>
+                        </a>
+                        <%})%>
+        </div>
+        <div class="bottom-tips">已到底部</div>
+        <!--空数据-->
+        <!-- <div class="empty-panel">
+    <img class="img" src="../no-data-normal.png" alt=" " />
+    <div class="txt">未搜索到匹配的信息</div>
+  </div> -->
+    </div>
+</body>
+<script>
+    document.querySelector('.ipt').addEventListener('keydown', function (e) {
+        if(e.keyCode == 13) {
+            var keyword = document.getElementById('ipt').value
+            if(url.indexOf('/mp1/ZX')!=-1){
+            window.location.href = ('/mp1/ZXS?keyword=' + keyword + '&tab=' + tab)
+                return
+            }
+            window.location.href = ('/mp/ZXS?keyword=' + keyword + '&tab=' + tab)
+        }
+    });
+
+</script>
+
+</html>
