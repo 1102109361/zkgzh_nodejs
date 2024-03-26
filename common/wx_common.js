@@ -473,13 +473,16 @@ function creatMyBtns(params, callBack, tryTimes) {
             method: "POST"
         }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
+                console.log(body, 'creatMyBtns body');
                 try {
                     body = JSON.parse(body);
                 } catch (e) {
                     console.error('creatMyBtns JSON解析错误', e);
                 }
+                console.error("creatMyBtns", body);
                 if (body.errcode == 40001) {
                     console.error("creatMyBtns", body);
+                    return
                     //token失效重试一次
                     if (tryTimes > 3) {
                         redisCache.delData({
@@ -535,11 +538,8 @@ function getQRCode(data, callBack, tryTimes) {
 
     async function getUrl() {
         //请求到微信云托管服务
-        console.log(global.wxCloudHost, 'global.wxCloudHost');
         var body1 = data
-        console.log(body1,'body qrcode');
         var result = await wxapi.call('cgi-bin/qrcode/create', body1);
-        console.log(result,'result qrcode');
         // var body = result.data;
         var newUrl = result.url;
         redisCache.saveDataTime(obj, newUrl, 2591999);

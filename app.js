@@ -10,7 +10,7 @@ var AV = require('leanengine');
 const mysql = require('mysql2');
 var SqlString = require("sqlstring");
 //微信云服务地址
-global.wxCloudHost = "https://ksbmmp.fjrst.cn";//临时域名
+// global.wxCloudHost = "https://ksbmmp.fjrst.cn";//临时域名
 // global.wxCloudHost = "https://mps.ksbm.fjrst.cn";
 const wxapi = require('./work/wxapi')
 
@@ -291,6 +291,77 @@ DbTools2.queryAsync('SELECT * FROM ksbm_area limit 0,1000').then(function (ret) 
     global.areaNameToCode = areaNameToCode;
     global.areaCodeToName = areaCodeToName;
 });
+// TODO 库变更
+const dbConfig3 = JSON.parse(process.env.MY_SQL3 || '{"host": "114.116.5.225", "port": "3306", "user": "zzhy-dev", "password": "zzhy-dev#2022", "database": "ksbm_na_sr", "waitForConnections": true, "connectionLimit": 180, "queueLimit": 0}');
+
+const SqlConnectPool3 = mysql.createPool(dbConfig3);
+
+SqlConnectPool3.on('connection', function (connection) {
+    console.log("SqlConnectPool3 连接", JSON.stringify(dbConfig3));
+});
+
+const DbTools3 = {
+    queryAsync: (sql, para) => { // 执行
+        return new Promise((resolve, reject) => {
+            SqlConnectPool3.getConnection((err, conn) => {
+                if (err) {
+                    console.error('DbTools3 error:', err.code, err.sqlMessage);
+                    return reject(err);
+                }
+                conn.query(sql, para, (err, rows) => {
+                    conn.release();
+                    if (err) {
+                        console.error('DbTools3 query errorcode:', err.code, '|message:', err.sqlMessage, sql);
+                        return reject(err);
+                    }
+                    return resolve(rows);
+                });
+            });
+        });
+    },
+    query: (sql, para, cb) => { // 执行
+        SqlConnectPool3.getConnection((err, conn) => {
+            if (err) {
+                console.error('DbTools3 error:', err.code, err.sqlMessage);
+                cb && cb(err);
+            }
+            conn.query(sql, para, (err, rows) => {
+                conn.release();
+                if (err) {
+                    console.error('DbTools3 query errorcode:', err.code, '|message:', err.sqlMessage, sql);
+                    cb && cb(err);
+                    return;
+                }
+                cb && cb(err, rows);
+            });
+        });
+
+    }
+};
+
+global.DbTools3 = DbTools3;
+DbTools3.queryAsync('SELECT count(*) as userlogCount FROM ksbm_weixin_user').then(function (ret) {
+    console.log('mysql请求数据列表结果', ret);
+}).catch(function (err) {
+    console.error('DbTools3.queryAsync error:', err.sqlMessage);
+});
+
+//获取地区
+DbTools3.queryAsync('SELECT * FROM ksbm_area limit 0,1000').then(function (ret) {
+    var areaNameToCode = {};
+    var areaCodeToName = {};
+    ret.forEach(function (node) {
+        var name = node.are_name || "";
+        var code = node.are_id || "";
+        areaNameToCode[name] = code;
+        areaCodeToName[code] = {
+            code: code,
+            name: name
+        };
+    });
+    global.areaNameToCode = areaNameToCode;
+    global.areaCodeToName = areaCodeToName;
+});
 
 app.get('/', function (req, res) {
     res.render('index', { currentTime: new Date() });
@@ -302,10 +373,12 @@ app.use("/dev", require('./routes/third/device_admin'));//设备管理
 app.use("/wx", require('./routes/wx-mini/wxApi'));//事业单位微信小程序接口
 app.use("/wx1", require('./routes/wx-mini/wxApi1'));//国有企业微信小程序接口
 app.use("/wx2", require('./routes/wx-mini/wxApi2'));//福建招考微信小程序接口
+app.use("/wx3", require('./routes/wx-mini/wxApi3'));//数人微信小程序接口
 app.use("/mp_ksbm", require('./routes/wx-mp/mp_ksbm'));//福建招聘平台微信公众号对接
 app.use("/mp", require('./routes/wx-mp/wxMpController'));//福建招聘平台微信公众号对接
 app.use("/mp1", require('./routes/wx-mp/wxMp1Controller'));//福建国有企业公开招聘公众号对接
 app.use("/mp2", require('./routes/wx-mp/wxMp2Controller'));//福建国有企业公开招聘公众号对接
+app.use("/mp3", require('./routes/wx-mp/wxMp3Controller'));//数人国企招聘公众号对接
 app.use("/hasx", require('./routes/third/hasx'));//成都华安视讯硬件对接接口
 app.use("/newland", require('./routes/third/newland'));//新大陆防疫设备件对接接口
 app.use("/hikyun", require('./routes/third/hikyun'));//测温云

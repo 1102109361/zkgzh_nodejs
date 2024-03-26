@@ -1,9 +1,9 @@
 //福建招聘平台 公众号推送模板消息
 var _ = require('lodash');
 var request = require("request");
-var redisCache = require('../../leancache/cache1');
+var redisCache = require('../../leancache/cache3');
 var WxCommon = require('../../common/wx_common');//微信操作相关的公共方法
-var WxDbHelper = require('./wx_db1');//微信操作相关的公共方法
+var WxDbHelper = require('./wx_db3');//微信操作相关的公共方法
 var WeixinConfig = JSON.parse(process.env.WXMP_KSBM || '{}');
 var mp_appid = WeixinConfig.mp_appid;
 var mp_secret = WeixinConfig.mp_secret;
@@ -11,8 +11,9 @@ var pushMpDefault = {
     mp_appid: mp_appid,
     mp_secret: mp_secret
 };
-var miniprogramAppId = 'wxdc280ee1a47a47fe'; // 小程序的appid,用于模板消息打开
-var host = process.env.MP_PAGE_HOST + '/mp1';
+// TODO appid
+var miniprogramAppId = 'wxe8a7286c786ad9b6'; // 小程序的appid,用于模板消息打开
+var host = process.env.MP_PAGE_HOST + '/mp3';
 const wxapi = require('../../work/wxapi')
 
 //10 笔试考试安排

@@ -224,7 +224,7 @@ router.post("/pushNotice", async (req, res) => {
         code: 0,
         msg: `即将推送${applyObj.length} 条模板消息。`
     });
-    
+
     function doPush(n) {
         n.usp_id = UUID.v4()
         n.title = title;
@@ -250,7 +250,7 @@ router.post("/pushNotice", async (req, res) => {
                 }
             }
             Mpush.pushInterviewNotice(openId || n.usr_openid, n);
-        } else if (type == 15||type==19) {//考试成绩提醒
+        } else if (type == 15 || type == 19) {//考试成绩提醒
             Mpush.pushScoreTip(openId || n.usr_openid, n);
         } else if (type == 16) {    //提供考生 进行确认参加笔试操作
             Mpush.pushExamNotice(openId || n.usr_openid, n);
@@ -260,26 +260,26 @@ router.post("/pushNotice", async (req, res) => {
     }
 
     function asyncReq(applyList) {
-        return new Promise(async function(resolve){
+        return new Promise(async function (resolve) {
             setTimeout(async function () {
                 for (let n of applyList) {
                     doPush(n)
                     resolve(n.usr_openid);
                 }
-            },3000);
+            }, 3000);
         });
     }
     //分批请求 batchNum 分批间隔数
     const batchNum = 500
     if (applyObj.length > batchNum) {
-        for (let i = 0; i < applyObj.length; i += batchNum){
-            await asyncReq(applyObj.slice(i,i+batchNum))
+        for (let i = 0; i < applyObj.length; i += batchNum) {
+            await asyncReq(applyObj.slice(i, i + batchNum))
         }
     } else {
         for (let n of applyObj) {
             doPush(n)
         }
-}
+    }
 });
 
 router.post("/pushProgress", async (req, res) => {
@@ -299,6 +299,19 @@ router.post("/pushProgress", async (req, res) => {
     Mpush.pushProgress(params.openId, params);
 });
 
+router.post("/pushWrong", async (req, res) => {
+    var params = req.body;
+    var time = params.time;//推送id
+    var sql = params.sql;//按sql推送
+    const applyObjList = await WxDbHelper.getWrongPush(time, sql);
+    for (let i = 0; i < applyObjList.length; i += 1) {
+        Mpush.pushWrong(applyObjList[i]);
+    }
+    res.json({
+        code: 0,
+        msg: `即将推送模板消息。`
+    });
+});
 
 //缓存数据读取
 async function getRedisData(k) {
@@ -340,7 +353,7 @@ router.get("/bindUser", async (req, res) => {
         return;
     }
     var idCard = obj.idCard;
-    console.log(idCard,'idCard');
+    console.log(idCard, 'idCard');
     var userObj = await WxDbHelper.getUserByIdCard(idCard);
     if (!userObj) {
         res.render('error', {
@@ -645,6 +658,13 @@ router.get("/notice/:id", async (req, res) => {
     });
 });
 
+router.get("/CS", async (req, res) => {
+    res.render('CS', {
+    });
+});
+
+
+
 //招聘动态
 router.get("/SZ", async (req, res) => {
     var host = 'http://ksbm.fjrst.cn:8903';
@@ -747,9 +767,29 @@ router.get("/ZX", async (req, res) => {
             value: y
         });
     }
-    var datas = await WxDbHelper.getSZPrj(keyword, year, areaCode);
-    var datas2 = await WxDbHelper.getSZPrj2(keyword, year, areaCode);
-    var datas3 = await WxDbHelper.getSZPrj3(keyword, year, areaCode);
+    var datas = await getRedisData("getSZPrjNew" + keyword + year + areaCode);
+    // console.log(datas, 'datas------ 缓存');
+    if (!datas) {
+        datas = await WxDbHelper.getSZPrj(keyword, year, areaCode);
+        // console.log(datas, 'datas------');
+        redisCache.saveDataTime("getSZPrjNew" + keyword + year + areaCode, datas, 6000);
+    }
+    var datas2 = await getRedisData("getSZPrj2New" + keyword + year + areaCode);
+    // console.log(datas2, 'datas2------ 缓存');
+    if (!datas2) {
+        datas2 = await WxDbHelper.getSZPrj2(keyword, year, areaCode);
+        // console.log(datas2, 'datas2------');
+        redisCache.saveDataTime("getSZPrj2New" + keyword + year + areaCode, datas2, 6000);
+    }
+
+    var datas3 = await getRedisData("getSZPrj3New" + keyword + year + areaCode);
+    // console.log(datas3, 'datas3------ 缓存');
+    if (!datas3) {
+        datas3 = await WxDbHelper.getSZPrj3(keyword, year, areaCode);
+        // console.log(datas3, 'datas3------');
+        redisCache.saveDataTime("getSZPrj3New" + keyword + year + areaCode, datas3, 6000);
+    }
+
     // console.log(datas[0],'datas');
     // console.log(datas2,'datas2');
     // console.log(datas3.length,'datas3');
@@ -800,12 +840,6 @@ router.get("/ZX", async (req, res) => {
         datas: backList,
         datas2: backList2,
         datas3: backList3,
-    });
-});
-
-//在线客服
-router.get("/CS", async (req, res) => {
-    res.render('CS', {
     });
 });
 
@@ -922,10 +956,10 @@ router.get("/ZDE", async (req, res) => {
     data.proName = pro.pro_title
     data.file = data.new_content_file ? JSON.parse(data.new_content_file) : []
     //图片显示
-    data.new_content=(data.new_content||'').replace('/ksbm/profile/upload','http://220.160.53.33:8903/ksbm/profile/upload')
-    data.new_content=(data.new_content||'').replace('<img','<img style="width:100%"')
-    data.new_content=(data.new_content||'').replace('<table','<table style="font-size:8px;border-spacing:0px"')
-    data.new_content=(data.new_content||'').replace(/<td/g,`<td style="
+    data.new_content = (data.new_content || '').replace('/ksbm/profile/upload', 'http://220.160.53.33:8903/ksbm/profile/upload')
+    data.new_content = (data.new_content || '').replace('<img', '<img style="width:100%"')
+    data.new_content = (data.new_content || '').replace('<table', '<table style="font-size:8px;border-spacing:0px"')
+    data.new_content = (data.new_content || '').replace(/<td/g, `<td style="
     border:solid #676767 1px;
     text-align:center;
     word-break:break-all !important;

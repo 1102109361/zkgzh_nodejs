@@ -83,7 +83,7 @@ async function pushScoreTip(openid, params) {
             "pagepath": "pages/index"
         },
         "data": {
-            "keyword1": getKey(params.pushType==15?'成绩发布通知':'资格复审通知'), 
+            "keyword1": getKey(params.pushType == 15 ? '成绩发布通知' : '资格复审通知'),
             "keyword2": getKey(params.title || '您的考试成绩已发布，请登录平台进行查询'), //读取标题
             "keyword3": getKey(params.remark || '请及时登录平台查询！'), //通知内容
             // "first": getKey(params.title || '您的考试成绩已发布，请登录平台进行查询'),
@@ -136,7 +136,7 @@ async function pushSignSuccess(openid, params) {
             "pagepath": "pages/index"
         },
         "data": {
-            "first": getKey('您报名的岗位（'+params.pos_post_name+'）已确认报名，请知悉。'),
+            "first": getKey('您报名的岗位（' + params.pos_post_name + '）已确认报名，请知悉。'),
             "keyword1": getKey(params.app_name || '未知'), //姓名
             "keyword2": getDateTimeKey(params.app_apply_time), //时间
             "keyword3": getKey('待审核'), //审核结果
@@ -161,7 +161,7 @@ async function pushSignAuditSuccess(openid, params) {
             "pagepath": "pages/index"
         },
         "data": {
-            "first":getKey('您报名的岗位（'+params.pos_post_name+'）审核已通过，请知悉。'),
+            "first": getKey('您报名的岗位（' + params.pos_post_name + '）审核已通过，请知悉。'),
             "keyword1": getKey(params.app_name || '未知'), //用户名
             "keyword2": getDateTimeKey(params.app_apply_time), //报名时间（添加岗位时间）
             "keyword3": getKey('审核通过！'), //审核结果
@@ -189,7 +189,7 @@ async function pushSignAuditFail(openid, params) {
             "pagepath": "pages/index"
         },
         "data": {
-            "first": getKey('您报名的岗位（'+params.pos_post_name+'）'+(params.app_status==-4?'申诉':'')+'审核不通过，请知悉'),
+            "first": getKey('您报名的岗位（' + params.pos_post_name + '）' + (params.app_status == -4 ? '申诉' : '') + '审核不通过，请知悉'),
             "keyword1": getKey(params.app_name || '未知', color), //报名姓名
             "keyword2": getDateTimeKey(params.app_apply_time, color), //报名时间（添加岗位时间）
             "keyword3": getKey('审核不通过'), //审核结果
@@ -211,7 +211,7 @@ async function pushSignAuditConflict(openid, params) {
             "pagepath": "pages/index"
         },
         "data": {
-            "first": getKey('您报名的岗位（'+params.pos_post_name+'）'+'与其他招聘方案考试时间冲突，请及时处理'),
+            "first": getKey('您报名的岗位（' + params.pos_post_name + '）' + '与其他招聘方案考试时间冲突，请及时处理'),
             "keyword1": getKey(params.app_name || '未知', color), //报名姓名
             "keyword2": getDateTimeKey(params.updatedAt, color), //服务时间
             "keyword3": getKey('报名失败'), //审核结果
@@ -272,10 +272,10 @@ async function pushAudit(openid, params) {
 async function pushBonusAudit(openid, params) {
     var url = host + "/applyInfo/" + params.sco_app_id;
     let StatusData = {
-        '1':'待审核',
-        '2':'审核通过',
-        '-1':'退回修改',
-        '-2':'审核不通过',
+        '1': '待审核',
+        '2': '审核通过',
+        '-1': '退回修改',
+        '-2': '审核不通过',
     }
     var msgData = {
         "template_id": 'tvD-JYCVk-UOAB_-Vq9Ly_J0P2Pw_1LwRY1shcrdi_s',
@@ -285,8 +285,8 @@ async function pushBonusAudit(openid, params) {
             "pagepath": "pages/index"
         },
         "data": {
-            "keyword1": getKey('加分申请审核结果'), 
-            "keyword2": getKey('已处理'), 
+            "keyword1": getKey('加分申请审核结果'),
+            "keyword2": getKey('已处理'),
             "keyword3": getKey(StatusData[params.sca_audit_status]), //审核结果
         }
     };
@@ -298,11 +298,11 @@ async function pushReviewAudit(openid, params) {
     var url = host + "/applyInfo/" + params.sco_app_id;
 
     let StatusData = {
-        '1':'待审核',
-        '2':'审核通过',
-        '-1':'放弃资格复审',
-        '-2':'资格复审不通过',
-        '-3':'材料复审不通过',
+        '1': '待审核',
+        '2': '审核通过',
+        '-1': '放弃资格复审',
+        '-2': '资格复审不通过',
+        '-3': '材料复审不通过',
     }
     var msgData = {
         "template_id": 'tvD-JYCVk-UOAB_-Vq9Ly_J0P2Pw_1LwRY1shcrdi_s',
@@ -312,8 +312,8 @@ async function pushReviewAudit(openid, params) {
             "pagepath": "pages/index"
         },
         "data": {
-            "keyword1": getKey('资格复审通知'), 
-            "keyword2": getKey('已处理'), 
+            "keyword1": getKey('资格复审通知'),
+            "keyword2": getKey('已处理'),
             "keyword3": getKey(StatusData[params.sco_recheck_status]), //审核结果
         }
     };
@@ -368,6 +368,10 @@ async function sendResultMsg(userPushObj, error, body) {
         userPushObj.usp_status = 2;//推送错误
         // console.error('---------成员单推到zhxy微信公众号失败：', userPushObj.openid, body);
     }
+    if (error && error.msg && [43101, 43004].includes(error.code)) {
+        userPushObj.usp_status = 4;//未关注公众号 推送失败
+        // console.error('未关注公众号 推送失败');
+    }
     userPushObj.usp_result = (error ? JSON.stringify(error) : '') + (body ? JSON.stringify(body) : '');
     await WxDbHelper.addPushLog(userPushObj);
 }
@@ -414,7 +418,7 @@ function sendWeiXinReq(data, touser, mpWx, cb) {
     async function toSendMsg(tryTimes) { //需要做重试
         //请求到微信云托管服务
         data.touser = touser;
-        var body=data
+        var body = data
         var result = await wxapi.call('cgi-bin/message/template/send', body);
         if (result.errcode) {
             cb && cb({

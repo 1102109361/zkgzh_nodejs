@@ -37,7 +37,7 @@ window.call = function (text) {
     }).then(response => response.text())
       .then(result => resolve(JSON.parse(result)))
       .catch(error => {
-        console.error(error)
+        console.error(error,'call err')
         resolve(false)
       })
   })

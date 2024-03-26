@@ -220,7 +220,7 @@ router.post("/pushNotice", async (req, res) => {
         code: 0,
         msg: `即将推送${applyObj.length} 条模板消息。`
     });
-    
+
     function doPush(n) {
         n.usp_id = UUID.v4()
         n.title = title;
@@ -246,7 +246,7 @@ router.post("/pushNotice", async (req, res) => {
                 }
             }
             Mpush.pushInterviewNotice(openId || n.usr_openid, n);
-        } else if (type == 15||type==19) {//考试成绩提醒
+        } else if (type == 15 || type == 19) {//考试成绩提醒
             Mpush.pushScoreTip(openId || n.usr_openid, n);
         } else if (type == 16) {    //提供考生 进行确认参加笔试操作
             Mpush.pushExamNotice(openId || n.usr_openid, n);
@@ -256,26 +256,26 @@ router.post("/pushNotice", async (req, res) => {
     }
 
     function asyncReq(applyList) {
-        return new Promise(async function(resolve){
+        return new Promise(async function (resolve) {
             setTimeout(async function () {
                 for (let n of applyList) {
                     doPush(n)
                     resolve(n.usr_openid);
                 }
-            },3000);
+            }, 3000);
         });
     }
     //分批请求 batchNum 分批间隔数
     const batchNum = 500
     if (applyObj.length > batchNum) {
-        for (let i = 0; i < applyObj.length; i += batchNum){
-            await asyncReq(applyObj.slice(i,i+batchNum))
+        for (let i = 0; i < applyObj.length; i += batchNum) {
+            await asyncReq(applyObj.slice(i, i + batchNum))
         }
     } else {
         for (let n of applyObj) {
             doPush(n)
         }
-}
+    }
 });
 
 //缓存数据读取
@@ -319,7 +319,7 @@ router.get("/bindUser", async (req, res) => {
     }
     var idCard = obj.idCard;
     if (idCard.indexOf('GQ_') != -1) {
-        idCard=idCard.replace('GQ_','')
+        idCard = idCard.replace('GQ_', '')
     }
     var userObj = await WxDbHelper.getUserByIdCard(idCard);
     if (!userObj) {
@@ -728,9 +728,28 @@ router.get("/ZX", async (req, res) => {
             value: y
         });
     }
-    var datas = await WxDbHelper.getSZPrj(keyword, year, areaCode);
-    var datas2 = await WxDbHelper.getSZPrj2(keyword, year, areaCode);
-    var datas3 = await WxDbHelper.getSZPrj3(keyword, year, areaCode);
+    var datas = await getRedisData("getSZPrjNew1" + keyword + year + areaCode);
+    // console.log(datas, 'datas------ 缓存');
+    if (!datas) {
+        datas = await WxDbHelper.getSZPrj(keyword, year, areaCode);
+        // console.log(datas, 'datas------');
+        redisCache.saveDataTime("getSZPrjNew1" + keyword + year + areaCode, datas, 6000);
+    }
+    var datas2 = await getRedisData("getSZPrj2New1" + keyword + year + areaCode);
+    // console.log(datas2, 'datas2------ 缓存');
+    if (!datas2) {
+        datas2 = await WxDbHelper.getSZPrj2(keyword, year, areaCode);
+        // console.log(datas2, 'datas2------');
+        redisCache.saveDataTime("getSZPrj2New1" + keyword + year + areaCode, datas2, 6000);
+    }
+
+    var datas3 = await getRedisData("getSZPrj3New1" + keyword + year + areaCode);
+    // console.log(datas3, 'datas3------ 缓存');
+    if (!datas3) {
+        datas3 = await WxDbHelper.getSZPrj3(keyword, year, areaCode);
+        // console.log(datas3, 'datas3------');
+        redisCache.saveDataTime("getSZPrj3New1" + keyword + year + areaCode, datas3, 6000);
+    }
     // console.log(datas[0],'datas');
     // console.log(datas2.length,'datas2');
     // console.log(datas3.length,'datas3');
@@ -893,11 +912,11 @@ router.get("/ZDE", async (req, res) => {
         data.proName = pro.pro_title
     }
     data.file = data.new_content_file ? JSON.parse(data.new_content_file) : []
-    data.new_content=(data.new_content||'').replace('/ksbm/profile/upload','https://www.fjsrlzy.cn/ksbm/profile/upload')
-    data.new_content=(data.new_content||'').replace('<img','<img style="width:100%"')
+    data.new_content = (data.new_content || '').replace('/ksbm/profile/upload', 'https://www.fjsrlzy.cn/ksbm/profile/upload')
+    data.new_content = (data.new_content || '').replace('<img', '<img style="width:100%"')
     // console.log(data,'data');
-    data.new_content=(data.new_content||'').replace('<table','<table style="font-size:8px;border-spacing:0px"')
-    data.new_content=(data.new_content||'').replace(/<td/g,`<td style="
+    data.new_content = (data.new_content || '').replace('<table', '<table style="font-size:8px;border-spacing:0px"')
+    data.new_content = (data.new_content || '').replace(/<td/g, `<td style="
     border:solid #676767 1px;
     text-align:center;
     word-break:break-all !important;

@@ -6,16 +6,16 @@ var _ = require('lodash');
 var UUID = require("uuid");
 var jwt = require('jsonwebtoken');
 
-var redisCache = require('../../leancache/cache2');
+var redisCache = require('../../leancache/cache3');
 var WxCommon = require('../../common/wx_common');//微信操作相关的公共方法
-var WxDbHelper = require('./wx_db2');//微信操作相关的公共方法
-var Mpush = require('./mp_push2');
-var siteWebUrl = '福建招聘考试服务平台https://fjzk.fjrst.cn'
-var siteWebName = '福建招聘考试服务平台'
+var WxDbHelper = require('./wx_db3');//微信操作相关的公共方法
+var Mpush = require('./mp_push3');
+var siteWebUrl = '国企招聘平台https://gqzp.fjrst.cn/'
+var siteWebName = '国企招聘平台'
 
 var secretOrPrivateKey = "wxMpReply"; // 这是加密的key（密钥）
 
-var picHost = process.env.PIC_HOST2;
+var picHost = process.env.PIC_HOST3;
 //推送服务
 
 //获取公众号动态二维码
@@ -33,7 +33,7 @@ router.post("/QRCode", async (req, res) => {
         "action_name": "QR_STR_SCENE",
         "action_info": {
             "scene": {
-                "scene_str": "BIND_ZK_" + params.idCard
+                "scene_str": "BIND_SR_" + params.idCard
             }
         }
     };
@@ -319,8 +319,8 @@ router.get("/bindUser", async (req, res) => {
         return;
     }
     var idCard = obj.idCard;
-    if (idCard.indexOf('ZK_') != -1) {
-        idCard = idCard.replace('ZK_', '')
+    if (idCard.indexOf('SR_') != -1) {
+        idCard = idCard.replace('SR_', '')
     }
     var userObj = await WxDbHelper.getUserByIdCard(idCard);
     if (!userObj) {
@@ -730,27 +730,27 @@ router.get("/ZX", async (req, res) => {
             value: y
         });
     }
-    var datas = await getRedisData("getSZPrjNew2" + keyword + year + areaCode);
+    var datas = await getRedisData("getSZPrjNew3" + keyword + year + areaCode);
     // console.log(datas, 'datas------ 缓存');
     if (!datas) {
         datas = await WxDbHelper.getSZPrj(keyword, year, areaCode);
         // console.log(datas, 'datas------');
-        redisCache.saveDataTime("getSZPrjNew2" + keyword + year + areaCode, datas, 6000);
+        redisCache.saveDataTime("getSZPrjNew3" + keyword + year + areaCode, datas, 6000);
     }
-    var datas2 = await getRedisData("getSZPrj2New2" + keyword + year + areaCode);
+    var datas2 = await getRedisData("getSZPrj2New3" + keyword + year + areaCode);
     // console.log(datas2, 'datas2------ 缓存');
     if (!datas2) {
         datas2 = await WxDbHelper.getSZPrj2(keyword, year, areaCode);
         // console.log(datas2, 'datas2------');
-        redisCache.saveDataTime("getSZPrj2New2" + keyword + year + areaCode, datas2, 6000);
+        redisCache.saveDataTime("getSZPrj2New3" + keyword + year + areaCode, datas2, 6000);
     }
 
-    var datas3 = await getRedisData("getSZPrj3New2" + keyword + year + areaCode);
+    var datas3 = await getRedisData("getSZPrj3New3" + keyword + year + areaCode);
     // console.log(datas3, 'datas3------ 缓存');
     if (!datas3) {
         datas3 = await WxDbHelper.getSZPrj3(keyword, year, areaCode);
         // console.log(datas3, 'datas3------');
-        redisCache.saveDataTime("getSZPrj3New2" + keyword + year + areaCode, datas3, 6000);
+        redisCache.saveDataTime("getSZPrj3New3" + keyword + year + areaCode, datas3, 6000);
     }
     // console.log(datas[0],'datas');
     // console.log(datas2.length,'datas2');
@@ -760,7 +760,7 @@ router.get("/ZX", async (req, res) => {
         var noticeTime = n.noticeTime;
         backList.push({
             title: n.title,
-            detailUrl: n.url || `${host}/mp2/ZDE?newId=${n.newId}`,
+            detailUrl: n.url || `${host}/mp3/ZDE?newId=${n.newId}`,
             noticeTime: WxDbHelper.changeDate(noticeTime, "yyyy/MM/dd"),
             areaCode: n.areaCode,
             proTitle: n.proTitle,
@@ -772,7 +772,7 @@ router.get("/ZX", async (req, res) => {
         var noticeTime = n.new_pub_date;
         backList2.push({
             title: n.new_title,
-            detailUrl: n.new_url || `${host}/mp2/ZDE?newId=${n.new_id}`,
+            detailUrl: n.new_url || `${host}/mp3/ZDE?newId=${n.new_id}`,
             noticeTime: WxDbHelper.changeDate(noticeTime, "yyyy/MM/dd"),
             areaCode: n.areaCode,
             proTitle: n.pro_title,
@@ -784,7 +784,7 @@ router.get("/ZX", async (req, res) => {
         var noticeTime = n.new_pub_date;
         backList3.push({
             title: n.new_title,
-            detailUrl: n.new_url || `${host}/mp2/ZDE?newId=${n.new_id}`,
+            detailUrl: n.new_url || `${host}/mp3/ZDE?newId=${n.new_id}`,
             noticeTime: WxDbHelper.changeDate(noticeTime, "yyyy/MM/dd"),
             areaCode: n.areaCode,
             proTitle: n.pro_title,
@@ -852,7 +852,7 @@ router.get("/ZXS", async (req, res) => {
         var noticeTime = n.noticeTime;
         backList.push({
             title: n.title,
-            detailUrl: n.url || `${host}/mp2/ZDE?newId=${n.newId}`,
+            detailUrl: n.url || `${host}/mp3/ZDE?newId=${n.newId}`,
             noticeTime: WxDbHelper.changeDate(noticeTime, "yyyy/MM/dd"),
             areaCode: n.areaCode,
             proTitle: n.proTitle,
@@ -864,7 +864,7 @@ router.get("/ZXS", async (req, res) => {
         var noticeTime = n.new_pub_date;
         backList2.push({
             title: n.new_title,
-            detailUrl: n.new_url || `${host}/mp2/ZDE?newId=${n.new_id}`,
+            detailUrl: n.new_url || `${host}/mp3/ZDE?newId=${n.new_id}`,
             noticeTime: WxDbHelper.changeDate(noticeTime, "yyyy/MM/dd"),
             areaCode: n.areaCode,
             proTitle: n.pro_title,
@@ -876,7 +876,7 @@ router.get("/ZXS", async (req, res) => {
         var noticeTime = n.new_pub_date;
         backList3.push({
             title: n.new_title,
-            detailUrl: n.new_url || `${host}/mp2/ZDE?newId=${n.new_id}`,
+            detailUrl: n.new_url || `${host}/mp3/ZDE?newId=${n.new_id}`,
             noticeTime: WxDbHelper.changeDate(noticeTime, "yyyy/MM/dd"),
             areaCode: n.areaCode,
             proTitle: n.pro_title,
@@ -910,9 +910,11 @@ router.get("/ZDE", async (req, res) => {
     }
     data.new_pub_date = WxDbHelper.changeDate(data.new_pub_date, "yyyy-MM-dd")
     var pro = await WxDbHelper.getPrjDetail(data.new_project_id)
-    data.proName = pro.pro_title
+    if (pro && pro.pro_title) {
+        data.proName = pro.pro_title
+    }
     data.file = data.new_content_file ? JSON.parse(data.new_content_file) : []
-    data.new_content = (data.new_content || '').replace('/ksbm/profile/upload', 'https://fjzk.fjrst.cn/ksbm/profile/upload')
+    data.new_content = (data.new_content || '').replace('/ksbm/profile/upload', 'https://gqzp.fjrst.cn/ksbm/profile/upload')
     data.new_content = (data.new_content || '').replace('<img', '<img style="width:100%"')
     data.new_content = (data.new_content || '').replace('<table', '<table style="font-size:8px;border-spacing:0px"')
     data.new_content = (data.new_content || '').replace(/<td/g, `<td style="
