@@ -1,5 +1,5 @@
 var SqlString = require("sqlstring");
-var { v4: uuid } = require('uuid');
+var {v4: uuid} = require('uuid');
 
 function changeDate(time, dateType) {
     time = new Date(time);
@@ -44,14 +44,14 @@ async function updateWxUserInfoUnionidMySql(appid, userInfo) {
                        where t.wur_appid = '${appid}'
                          and t.wur_unionid = '${userInfo.unionid}'`
         var sql = SqlString.format("INSERT INTO ksbm_weixin_user SET ?", dataObj);
-        var oldObj = await DbTools1.queryAsync(sql_old);
+        var oldObj = await DbTools3.queryAsync(sql_old);
         if (oldObj.length) {//有旧数据
             dataObj.wur_id = oldObj[0].wur_id;
             sql = SqlString.format("update ksbm_weixin_user SET ? where wur_id=?", [dataObj, dataObj.wur_id]);
         }
         var i = 0;
         try {
-            await DbTools1.queryAsync(sql);
+            await DbTools3.queryAsync(sql);
             i++;
         } catch (e) {
             console.error('updateWxUserInfoUnionidMySql插入通行记录失败：', i, sql, e);
@@ -67,7 +67,7 @@ async function getApplyList(appIds) {
     var sql = `select *
                from ksbm_apply
                where app_id in ('${appIds.join("','")}')`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     return arr;
 }
 
@@ -101,7 +101,7 @@ async function getApplyInfoById(appId) {
                  AND t.app_user_id = u.usr_user_id
                  and p.pos_id = t.app_pos_id
                  and t.app_pro_id = pro.pro_id`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     return arr;
 }
 
@@ -121,7 +121,7 @@ async function getApplyPushList(appIds) {
                  AND t.app_user_id = u.usr_user_id
                  and p.pos_id = t.app_pos_id
                  AND u.usr_openid IS NOT NULL`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     return arr;
 }
 //加分审核结果信息获取
@@ -135,7 +135,7 @@ async function getReviewPushList1(appIds) {
                 INNER JOIN ksbm_user u on a.app_user_id = u.usr_user_id
                 WHERE
                 sca_app_id IN ('${appIds.join("','")}')`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     return arr;
 }
 
@@ -150,7 +150,7 @@ async function getReviewPushList2(appIds) {
                 INNER JOIN ksbm_user u on a.app_user_id = u.usr_user_id
                 WHERE
                 sco_app_id IN ('${appIds.join("','")}')`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     return arr;
 }
 
@@ -181,7 +181,7 @@ async function getApplyAuditList() {
                  AND p.pro_status = 1
                  AND b.is_del = 0
                GROUP BY p.pro_id`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     return arr;
 }
 
@@ -192,7 +192,7 @@ async function getUserByIdCard(idCard) {
     from ksbm_user u,sys_user s
     where s.user_name = '${idCard}'
     and u.usr_user_id = s.user_id`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     var obj = arr[0];
     return obj;
 }
@@ -204,10 +204,11 @@ async function getUserByOpenId(openId) {
     from ksbm_user u,sys_user s
     where usr_openid =  '${openId}'
     and s.user_id = u.usr_user_id`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     var obj = arr[0];
     return obj;
 }
+
 
 
 //通过userid获取用户信息
@@ -215,7 +216,7 @@ async function getUserByUserIds(userIds) {
     var sql = `select *
                from ksbm_user
                where usr_user_id in ('${userIds.join("','")}')`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     return arr;
 }
 
@@ -231,7 +232,7 @@ async function changeUserOpenId(idCard, openId) {
 				where s.user_name = '${idCard}'
 				and u.usr_user_id = s.user_id`;
     }
-    await DbTools1.queryAsync(sql);
+    await DbTools3.queryAsync(sql);
     return;
 }
 
@@ -247,7 +248,7 @@ async function addPushLog(obj) {
         sqlData.usp_id = uuid();
     }
     var sql = SqlString.format("INSERT INTO ksbm_user_push set ?", sqlData);
-    await DbTools1.queryAsync(sql);
+    await DbTools3.queryAsync(sql);
     return;
 }
 
@@ -266,7 +267,7 @@ async function getScoreList(ids) {
        
 from ksbm_score ks
 where ks.sco_id in ('${ids.join("','")}');`;
-    var list = await DbTools1.queryAsync(sql);
+    var list = await DbTools3.queryAsync(sql);
     return list;
 }
 
@@ -281,7 +282,7 @@ async function getScoreById(scoId) {
                       ks.*
                from ksbm_score ks
                where sco_id = '${scoId}'`;
-    var arr = await DbTools1.queryAsync(sql);
+    var arr = await DbTools3.queryAsync(sql);
     var obj = arr[0];
     return obj;
 }
@@ -293,7 +294,7 @@ async function getPrjDetail(id) {
                 date_format(pro_exam_time, '%Y-%m-%d %H:%i') as pro_exam_time
                from ksbm_project p
                where pro_id = '${id}'`;
-    var list = await DbTools1.queryAsync(sql);
+    var list = await DbTools3.queryAsync(sql);
     return list[0];
 }
 
@@ -336,7 +337,6 @@ async function getSZPrj(keyword, areaCode, year) {
         and new_pub_date<date_format(NOW(), '%Y-%m-%d %H:%i:%S') 
         ) a
     where status > 0
-    AND  url is not null
     ${keyword ? `AND (title LIKE concat( '%','${keyword}','%') or  proTitle like concat('%','${keyword}','%') ) ` : ''}
 
     ${areaCode ? ` AND left(a.areaCode,6) = ${areaCode}` : ''}
@@ -346,7 +346,7 @@ async function getSZPrj(keyword, areaCode, year) {
     limit 0,50
     `;
     // limit 0,200
-    var list = await DbTools1.queryAsync(sql);
+    var list = await DbTools3.queryAsync(sql);
     return list;
 }
 
@@ -377,7 +377,7 @@ async function getSZPrj2(keyword, areaCode, year) {
         order by t.new_pub_date desc
     limit 0,50
     `;
-    var list = await DbTools1.queryAsync(sql);
+    var list = await DbTools3.queryAsync(sql);
     return list;
 }
 
@@ -408,7 +408,7 @@ async function getSZPrj3(keyword, areaCode, year) {
         order by t.new_pub_date desc
     limit 0,50
     `;
-    var list = await DbTools1.queryAsync(sql);
+    var list = await DbTools3.queryAsync(sql);
     return list;
 }
 
@@ -417,7 +417,7 @@ async function getSZSingle(newId) {
     var sql = `
     SELECT * FROM ksbm_news where  new_id='${newId}' limit 0,1
     `;
-    var list = await DbTools1.queryAsync(sql);
+    var list = await DbTools3.queryAsync(sql);
     return list;
 }
 

@@ -18,6 +18,9 @@
     var url = window.location.href
     function getUrlParams(url) {
         let urlStr = url.split('?')[1]
+        if(!urlStr){
+            return {tab:1}
+        }
         let obj = {};
         let paramsArr = urlStr.split('&')
         for(let i = 0, len = paramsArr.length; i < len; i++) {

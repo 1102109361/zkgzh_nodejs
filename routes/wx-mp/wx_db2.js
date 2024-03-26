@@ -343,6 +343,7 @@ async function getSZPrj(keyword, areaCode, year) {
 
     ${year ? `and year(a.noticeTime) = ${year}` : ''}
     ORDER BY a.noticeTime DESC
+    limit 0,50
     `;
     // limit 0,200
     var list = await DbTools2.queryAsync(sql);
@@ -374,6 +375,7 @@ async function getSZPrj2(keyword, areaCode, year) {
     ${year ? `and year(a.noticeTime) = ${year}` : ''}
     
         order by t.new_pub_date desc
+    limit 0,50
     `;
     var list = await DbTools2.queryAsync(sql);
     return list;
@@ -404,6 +406,7 @@ async function getSZPrj3(keyword, areaCode, year) {
     ${year ? `and year(a.noticeTime) = ${year}` : ''}
     
         order by t.new_pub_date desc
+    limit 0,50
     `;
     var list = await DbTools2.queryAsync(sql);
     return list;

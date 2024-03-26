@@ -24,45 +24,6 @@
     </div>
 </body>
 <script>
-    // 获取图片元素  
-    var imageElement = document.getElementById('downloadImage');
-
-    // 添加长按事件监听器  
-    imageElement.addEventListener('touchstart', function (e) {
-        // 记录开始按下的时间  
-        var touchStartTime = Date.now();
-
-        // 添加触摸结束事件监听器  
-        document.addEventListener('touchend', function (e) {
-            // 计算按下持续时间  
-            var touchEndTime = Date.now();
-            var touchDuration = touchEndTime - touchStartTime;
-
-            // 如果按下时间超过500毫秒，则执行下载操作  
-            if (touchDuration > 500) {
-                // downloadImage();
-                saveImage(imageElement.src  || 'https://ksbmmp.fjrst.cn/customer.png')
-            }
-
-            // 移除触摸结束事件监听器，避免多次触发  
-            document.removeEventListener('touchend', arguments.callee);
-        }, false);
-    }, false);
-
-    function saveImage(imageUrl) {
-        var canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d");
-        var img = new Image();
-        img.crossOrigin = "Anonymous";
-        img.src = imageUrl;
-        img.onload = function () {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            ctx.drawImage(img, 0, 0);
-            var dataURL = canvas.toDataURL('image/jpeg');
-            window.location.href = dataURL.replace(/^data:image\/(png|jpeg);base64,/, '');
-        };
-    }
 </script>
 
 </html>

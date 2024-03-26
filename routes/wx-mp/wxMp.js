@@ -17,7 +17,7 @@ var mp_secret = wxMps.mp_secret;
 //     "name": "岗位查询",
 //     "type": "miniprogram",
 //     "url": "https://mp.ksbm.fjrst.cn/mp/ZX",
-//     "appid": "wx08e1a0a9f418898a",
+//     "appid": "wx09103ce6a3d17f8d",
 //     "pagepath": "pages/positionQuery/positionQuery"
 // },
 var btns = {
@@ -31,7 +31,7 @@ var btns = {
             "name": "事业招考",
             "type": "miniprogram",
             "url": "https://ksbmmp.fjrst.cn/mp/ZX",
-            "appid": "wx08e1a0a9f418898a",
+            "appid": "wx09103ce6a3d17f8d",
             "pagepath": "pages/index"
         }, {
             "type": "view",

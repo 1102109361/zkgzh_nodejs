@@ -252,7 +252,18 @@ async function addPushLog(obj) {
     await DbTools.queryAsync(sql);
     return;
 }
-
+//重新推送更新推送日志
+async function updatePushLog(obj) {
+    console.log(obj, 'obj');
+    if (!obj) {
+        return;
+    }
+    var sql = SqlString.format("update ksbm_user_push set usp_status=?,usp_result=? where usp_id=?", [obj.usp_status, obj.usp_result, obj.usp_id]);
+    // var sql = `update ksbm_user_push set usp_status='${obj.usp_status}' and usp_result='${obj.usp_result}' where usp_id='${obj.usp_id}'`;
+    console.log(sql, 'sql');
+    await DbTools.queryAsync(sql);
+    return;
+}
 //获取考场安排
 async function getScoreList(ids) {
     var sql = `select ks.*,
@@ -301,7 +312,7 @@ async function getPrjDetail(id) {
 }
 
 //招聘资讯获取
-async function getSZPrj(keyword, areaCode, year) {
+async function getSZPrj(keyword, areaCode, year, page) {
     var sql = `
     SELECT * FROM
     ( SELECT
@@ -341,11 +352,9 @@ async function getSZPrj(keyword, areaCode, year) {
     where status > 0
     ${keyword ? `AND (title LIKE concat( '%','${keyword}','%') or  proTitle like concat('%','${keyword}','%') ) ` : ''}
     ${areaCode ? ` AND left(a.areaCode,6) = ${areaCode}` : ''}
-
     ${year ? `and year(a.noticeTime) = ${year}` : ''}
     ORDER BY a.noticeTime DESC
     `;
-    // limit 0,200
     var list = await DbTools.queryAsync(sql);
     return list;
 }
@@ -375,6 +384,8 @@ async function getSZPrj2(keyword, areaCode, year) {
     ${year ? `and year(new_pub_date) = ${year}` : ''}
     
         order by t.new_pub_date desc
+    
+
     `;
     var list = await DbTools.queryAsync(sql);
     return list;
@@ -405,6 +416,7 @@ async function getSZPrj3(keyword, areaCode, year) {
     ${year ? `and year(new_pub_date) = ${year}` : ''}
     
         order by t.new_pub_date desc
+    
     `;
     var list = await DbTools.queryAsync(sql);
     return list;
@@ -417,6 +429,20 @@ async function getSZSingle(newId) {
     `;
     var list = await DbTools.queryAsync(sql);
     return list;
+}
+
+//通过userid获取用户信息
+async function getWrongPush(time, sql) {
+    if (sql) {
+        var doSql = sql
+    } else if (time) {
+        var doSql = `select * from ksbm_user_push where createdAt > '${time}' and usp_status != 1 ;`;
+    } else {
+        console.log(changeDate(new Date(), 'yyyy-MM-dd'));
+        var doSql = `select * from ksbm_user_push where createdAt > '${changeDate(new Date(), 'yyyy-MM-dd')}' and usp_status != 1 ;`;
+    }
+    var arr = await DbTools.queryAsync(doSql);
+    return arr;
 }
 
 module.exports = {
@@ -439,5 +465,7 @@ module.exports = {
     getSZSingle,
     changeDate,
     getReviewPushList1,
-    getReviewPushList2
+    getReviewPushList2,
+    getWrongPush,
+    updatePushLog
 }

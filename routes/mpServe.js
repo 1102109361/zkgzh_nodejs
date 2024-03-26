@@ -47,7 +47,10 @@ router.post("/", async (req, res, next) => {
                     scanQrCodeReply(openid, idCard, 2);
                 } else if (key.indexOf("qrscene_BIND_ZK_") == 0) {
                     var idCard = key.replace("qrscene_BIND_ZK_", "");
-                    scanQrCodeReply(openid, idCard, 3);   
+                    scanQrCodeReply(openid, idCard, 3);
+                } else if (key.indexOf("qrscene_BIND_SR") == 0) {
+                    var idCard = key.replace("qrscene_BIND_SR", "");
+                    scanQrCodeReply(openid, idCard, 4);
                 } else if (key.indexOf("qrscene_BIND_") == 0) {
                     var idCard = key.replace("qrscene_BIND_", "");
                     scanQrCodeReply(openid, idCard);
@@ -62,6 +65,9 @@ router.post("/", async (req, res, next) => {
                 } else if (key.indexOf("BIND_ZK_") == 0) {
                     var idCard = key.replace("BIND_ZK_", "");
                     scanQrCodeReply(openid, idCard, 3);
+                } else if (key.indexOf("BIND_SR_") == 0) {
+                    var idCard = key.replace("BIND_SR_", "");
+                    scanQrCodeReply(openid, idCard, 4);
                 } else if (key.indexOf("BIND_") == 0) {
                     var idCard = key.replace("BIND_", "");
                     scanQrCodeReply(openid, idCard);
@@ -126,6 +132,28 @@ function scanQrCodeReply(openId, idCard, siteType) {
                 msgtype: "link",
                 link: {
                     "title": "福建招考平台帐号绑定指引",
+                    "description": ">>>戳此立即绑定  绑定后可实时了解审核动态、考试信息、成绩查询等信息",
+                    "url": p_url,
+                    "thumb_url": `${host}/zplogo.png`
+                }
+            })
+        }, function (error, response) {
+            if (error) {
+                console.error("scanQrCodeReply", error);
+            } else {
+                console.log("scanQrCodeReply", response.body);
+            }
+        });
+    } else if (siteType == 4) {
+        var p_url = `${host}/mp3/bindUser?k=${saveKey}`;
+        request({
+            method: 'POST',
+            url: 'http://api.weixin.qq.com/cgi-bin/message/custom/send',
+            body: JSON.stringify({
+                touser: openId, // 一般是消息推送 body 的FromUserName值，为用户的openid
+                msgtype: "link",
+                link: {
+                    "title": "国企招聘平台帐号绑定指引",
                     "description": ">>>戳此立即绑定  绑定后可实时了解审核动态、考试信息、成绩查询等信息",
                     "url": p_url,
                     "thumb_url": `${host}/zplogo.png`
